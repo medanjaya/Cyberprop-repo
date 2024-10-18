@@ -7,7 +7,7 @@ class Kontak extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Center(
-      child: Text('Ini adalah Beranda'),
+      child: Text('Ini adalah Kontak'),
     );
   }
 }
