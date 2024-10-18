@@ -1,10 +1,11 @@
-import 'package:cyberphobe/agen/login.dart';
 import 'package:flutter/material.dart';
 
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
 
 import 'package:cyberphobe_project/home.dart';
+import 'package:cyberphobe_project/agen/login.dart';
+import 'package:cyberphobe_project/firebase_testcase.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -28,7 +29,7 @@ class MainApp extends StatelessWidget {
         ),
         useMaterial3: false,
       ),
-      home: const HomePage(),
+      home: const TestCase(),
     );
   }
 }
