@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'menu.dart'; // Pastikan untuk mengimpor Menu
 
 class Login extends StatelessWidget {
   const Login({super.key});
@@ -6,21 +7,21 @@ class Login extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color.fromARGB(100, 255, 223, 183),
+      backgroundColor: const Color.fromARGB(100, 255, 223, 183),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Image(image: AssetImage('lib/assets/Logo.png')), // Pastikan ini sesuai
+            const Image(image: AssetImage('lib/assets/Logo.png')), // Pastikan ini sesuai
             const SizedBox(height: 20),
 
             // Username field
-            Container(
+            SizedBox(
               width: MediaQuery.of(context).size.width / 3,
-              child: Column(
+              child: const Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Text(
+                  Text(
                     'Username',
                     style: TextStyle(
                       color: Color.fromARGB(255, 167, 86, 86),
@@ -28,7 +29,7 @@ class Login extends StatelessWidget {
                       fontSize: 16,
                     ),
                   ),
-                  const SizedBox(height: 8),
+                  SizedBox(height: 8),
                   TextField(
                     decoration: InputDecoration(
                       filled: true,
@@ -43,12 +44,12 @@ class Login extends StatelessWidget {
             const SizedBox(height: 20),
 
             // Password field
-            Container(
+            SizedBox(
               width: MediaQuery.of(context).size.width / 3,
-              child: Column(
+              child: const Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Text(
+                  Text(
                     'Password',
                     style: TextStyle(
                       color: Color.fromARGB(255, 167, 86, 86),
@@ -56,7 +57,7 @@ class Login extends StatelessWidget {
                       fontSize: 16,
                     ),
                   ),
-                  const SizedBox(height: 8),
+                  SizedBox(height: 8),
                   TextField(
                     obscureText: true,
                     decoration: InputDecoration(
@@ -72,15 +73,19 @@ class Login extends StatelessWidget {
             const SizedBox(height: 20),
 
             // Login button with full width as TextField
-            Container(
+            SizedBox(
               width: MediaQuery.of(context).size.width / 3,
               child: ElevatedButton(
                 onPressed: () {
-                  // Tambahkan logika login di sini
+                  // Navigasi ke Menu setelah login berhasil
+                  Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(builder: (context) => const Menu()),
+                  );
                 },
                 style: ElevatedButton.styleFrom(
                   foregroundColor: Colors.white,
-                  backgroundColor: Color.fromARGB(255, 167, 86, 86),
+                  backgroundColor: const Color.fromARGB(255, 167, 86, 86),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(0),
                   ),
@@ -91,7 +96,7 @@ class Login extends StatelessWidget {
 
             const SizedBox(height: 10),
 
-            Text(
+            const Text(
               'Belum memiliki akun?',
               style: TextStyle(
                 color: Color.fromARGB(100, 171, 0, 0),
