@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'home_page.dart';      // Import halaman Beranda
-import 'search_page.dart';    // Import halaman Pencarian
+import 'kontak.dart';      // Import halaman Beranda
+import 'properti.dart';    // Import halaman Pencarian
 import 'settings_page.dart';  // Import halaman Pengaturan
 
 class Menu extends StatefulWidget {
@@ -14,8 +14,8 @@ class _MenuState extends State<Menu> {
   int _selectedIndex = 0;
 
   final List<Widget> _pages = const [
-    HomePage(),      // Halaman Beranda
-    SearchPage(),    // Halaman Pencarian
+    Kontak(),      // Halaman Beranda
+    Properti(),    // Halaman Pencarian
     SettingsPage(),  // Halaman Pengaturan
   ];
 
