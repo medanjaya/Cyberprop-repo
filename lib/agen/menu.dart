@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'kontak.dart';      // Import halaman Beranda
-import 'properti.dart';    // Import halaman Pencarian
+import 'kontak.dart';      // Import halaman Kontak
+import 'properti.dart';    // Import halaman Properti
 import 'settings_page.dart';  // Import halaman Pengaturan
 
 class Menu extends StatefulWidget {
@@ -14,8 +14,8 @@ class _MenuState extends State<Menu> {
   int _selectedIndex = 0;
 
   final List<Widget> _pages = const [
-    Kontak(),      // Halaman Beranda
-    Properti(),    // Halaman Pencarian
+    Kontak(),      // Halaman Kontak
+    Properti(),    // Halaman Properti
     SettingsPage(),  // Halaman Pengaturan
   ];
 
@@ -62,11 +62,68 @@ class _MenuState extends State<Menu> {
                 ],
               ),
             ),
-            // Menu item tambahan di sini jika perlu
           ],
         ),
       ),
-      body: _pages[_selectedIndex], // Menampilkan halaman sesuai indeks yang dipilih
+      body: Column(
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: const Text(
+              'Daftar Item',
+              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+            ),
+          ),
+          Expanded(
+            child: ListView.builder(
+              itemCount: 3, // Ganti dengan jumlah item yang sebenarnya
+              itemBuilder: (context, index) {
+                return Container(
+                  margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 16), // Spasi antar item
+                  padding: const EdgeInsets.all(16), // Padding dalam kotak
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(8),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.grey.withOpacity(0.2),
+                        spreadRadius: 2,
+                        blurRadius: 5,
+                        offset: const Offset(0, 3), // Posisi bayangan
+                      ),
+                    ],
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Expanded(
+                        child: Text(
+                          'Item ke-$index',
+                          style: const TextStyle(fontSize: 18),
+                        ),
+                      ),
+                      IconButton(
+                        icon: const Icon(Icons.edit, color: Color.fromARGB(255, 167, 86, 86)),
+                        onPressed: () {
+                          // Tindakan saat ikon edit ditekan
+                          print('Edit Item ke-$index');
+                        },
+                      ),
+                    ],
+                  ),
+                );
+              },
+            ),
+          ),
+        ],
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          // Tindakan saat tombol tambah ditekan, misalnya menambahkan item baru
+          print('Tombol tambah ditekan');
+        },
+        child: const Icon(Icons.add),
+      ),
       bottomNavigationBar: BottomNavigationBar(
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
