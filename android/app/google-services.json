@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "247073690698",
+    "project_id": "cyberprop-proj",
+    "storage_bucket": "cyberprop-proj.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:247073690698:android:02ebebbe962b43e7af82b3",
+        "android_client_info": {
+          "package_name": "com.cyberprop.app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDx2HV1l3XB5IKr--g1kIGNbihxom1rdHY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
