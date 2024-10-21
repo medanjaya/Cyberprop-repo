@@ -41,7 +41,7 @@ class _LoginState extends State<Login> {
   @override //TODO : scaling pakai expanded
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color.fromARGB(99, 226, 139, 33),
+      backgroundColor: const Color.fromARGB(99, 226, 139, 33), // TODO : ini perlu kah? nb warna transparan
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -52,8 +52,9 @@ class _LoginState extends State<Login> {
             const Text(
               'Cyberprop (v0.pa) (UKS)',
               style: TextStyle(
-                color: Color.fromARGB(255, 233, 239, 214),
-                fontSize: 8.0,
+                color: Color.fromARGB(255, 167, 86, 86), // TODO : Color.fromARGB(255, 233, 239, 214)
+                fontWeight: FontWeight.bold,
+                fontSize: 16.0, // TODO : 8.0
               ),
             ),
             const SizedBox(

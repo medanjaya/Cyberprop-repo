@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
 
-import 'agen/login.dart';
+import 'agen/menu.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -28,7 +28,7 @@ class MainApp extends StatelessWidget {
         ),
         useMaterial3: false,
       ),
-      home: const Login(),
+      home: const Menu(),
     );
   }
 }
