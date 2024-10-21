@@ -3,9 +3,12 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 import 'login.dart';
-import 'kontak.dart';      // Import halaman Kontak
-import 'properti.dart';    // Import halaman Properti
-import 'settings_page.dart';  // Import halaman Pengaturan
+import 'kontak.dart';
+import 'properti.dart';
+import 'settings.dart';
+
+//TODO : rencananya, menu untuk klien sama agen di satu file; pakai isAdmin nanti buat pisahkan
+bool isAdmin = false;
 
 void checkAuthState(context) {
   FirebaseAuth.instance
@@ -39,15 +42,17 @@ class _MenuState extends State<Menu> {
   int selectedIndex = 0;
 
   final List<Widget> pages = const [
-    Kontak(),      // Halaman Kontak
-    Properti(),    // Halaman Properti
-    SettingsPage(),  // Halaman Pengaturan
+    Kontak(),
+    Properti(),
+    SettingsPage(),
   ];
 
   void _onItemTapped(int index) {
-    setState(() {
-      selectedIndex = index;
-    });
+    setState(
+      () {
+        selectedIndex = index;
+      }
+    );
   }
 
   @override
@@ -72,30 +77,33 @@ class _MenuState extends State<Menu> {
         child: ListView(
           padding: EdgeInsets.zero,
           children: [
-            DrawerHeader(
-              decoration: BoxDecoration(
-                color: const Color.fromARGB(255, 255, 223, 183),
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Image.asset('assets/logo.png'), // Logo
-                  Text(
-                    'Cyberprop',
-                    style: TextStyle(
-                      color: Colors.black,
-                      fontSize: 24,
-                      fontWeight: FontWeight.bold,
+            SizedBox(
+              height: MediaQuery.of(context).size.height / 3,
+              child: DrawerHeader(
+                decoration: BoxDecoration(
+                  color: const Color.fromARGB(255, 255, 223, 183),
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Image.asset('assets/logo.png'),
+                    const Text(
+                      'Cyberprop',
+                      style: TextStyle(
+                        color: Colors.black,
+                        fontSize: 24,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
-                  ),
-                  const Text(
-                    'Halo, {nama agent}', // Placeholder untuk nama agen
-                    style: TextStyle(
-                      color: Colors.black,
-                      fontSize: 16,
+                    Text(
+                      'Halo, ${FirebaseAuth.instance.currentUser?.email}',
+                      style: TextStyle(
+                        color: Colors.black,
+                        fontSize: 16,
+                      ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
           ],
@@ -115,7 +123,10 @@ class _MenuState extends State<Menu> {
               itemCount: 3, // Ganti dengan jumlah item yang sebenarnya
               itemBuilder: (context, index) {
                 return Container(
-                  margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 16), // Spasi antar item
+                  margin: const EdgeInsets.symmetric(
+                    vertical: 8,
+                    horizontal: 16
+                  ), // Spasi antar item
                   padding: const EdgeInsets.all(16), // Padding dalam kotak
                   decoration: BoxDecoration(
                     color: Colors.white,
@@ -139,7 +150,10 @@ class _MenuState extends State<Menu> {
                         ),
                       ),
                       IconButton(
-                        icon: const Icon(Icons.edit, color: Color.fromARGB(255, 167, 86, 86)),
+                        icon: const Icon(
+                          Icons.edit,
+                          color: Color.fromARGB(255, 167, 86, 86),
+                        ),
                         onPressed: () {
                           // Tindakan saat ikon edit ditekan
                           print('Edit Item ke-$index');
