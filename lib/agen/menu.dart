@@ -1,7 +1,32 @@
 import 'package:flutter/material.dart';
+
+import 'package:firebase_auth/firebase_auth.dart';
+
+import 'login.dart';
 import 'kontak.dart';      // Import halaman Kontak
 import 'properti.dart';    // Import halaman Properti
 import 'settings_page.dart';  // Import halaman Pengaturan
+
+void checkAuthState(context) {
+  FirebaseAuth.instance
+  .authStateChanges()
+  .listen(
+    (User? user) {
+      if (user == null) {
+        Navigator.of(context)
+        .pushAndRemoveUntil(
+          MaterialPageRoute(
+            builder: (context) => const Login(),
+          ),
+          (Route route) => false
+        );
+      }
+      else {
+        //TODO : mau isi apa ya?
+      }
+    },
+  );
+}
 
 class Menu extends StatefulWidget {
   const Menu({super.key});
@@ -11,9 +36,9 @@ class Menu extends StatefulWidget {
 }
 
 class _MenuState extends State<Menu> {
-  int _selectedIndex = 0;
+  int selectedIndex = 0;
 
-  final List<Widget> _pages = const [
+  final List<Widget> pages = const [
     Kontak(),      // Halaman Kontak
     Properti(),    // Halaman Properti
     SettingsPage(),  // Halaman Pengaturan
@@ -21,7 +46,7 @@ class _MenuState extends State<Menu> {
 
   void _onItemTapped(int index) {
     setState(() {
-      _selectedIndex = index;
+      selectedIndex = index;
     });
   }
 
@@ -31,6 +56,17 @@ class _MenuState extends State<Menu> {
       appBar: AppBar(
         title: const Text('Menu'),
         backgroundColor: const Color.fromARGB(255, 167, 86, 86), // Warna yang sama
+        actions: [
+          IconButton(
+            onPressed: () async {
+              await FirebaseAuth.instance.signOut();
+              if (context.mounted) {
+                checkAuthState(context);
+              }
+            },
+            icon: const Icon(Icons.exit_to_app)
+          ),
+        ],
       ),
       drawer: Drawer(
         child: ListView(
@@ -139,7 +175,7 @@ class _MenuState extends State<Menu> {
             label: 'Pengaturan',
           ),
         ],
-        currentIndex: _selectedIndex,
+        currentIndex: selectedIndex,
         onTap: _onItemTapped,
         backgroundColor: const Color.fromARGB(255, 255, 223, 183), // Warna latar belakang
       ),

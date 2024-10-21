@@ -1,24 +1,67 @@
 import 'package:flutter/material.dart';
-import 'menu.dart'; // Pastikan untuk mengimpor Menu
+import 'package:firebase_auth/firebase_auth.dart';
 
-class Login extends StatelessWidget {
+import 'menu.dart';
+
+void checkAuthState(context) {
+  FirebaseAuth.instance
+  .authStateChanges()
+  .listen(
+    (User? user) {
+      if (user != null) {
+        Navigator.of(context)
+        .pushAndRemoveUntil(
+          MaterialPageRoute(
+            builder: (context) => const Menu(),
+          ),
+          (Route route) => false
+        );
+      }
+    },
+  );
+}
+
+class Login extends StatefulWidget {
   const Login({super.key});
 
   @override
+  State<Login> createState() => _LoginState();
+}
+
+class _LoginState extends State<Login> {
+  final user = TextEditingController();
+  final pass = TextEditingController();
+  
+  @override
+  void initState() {
+    checkAuthState(context);
+    super.initState();
+  }
+
+  @override //TODO : scaling pakai expanded
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color.fromARGB(100, 255, 223, 183),
+      backgroundColor: const Color.fromARGB(99, 226, 139, 33),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const Image(image: AssetImage('assets/logo.png')), // Pastikan ini sesuai
-            const SizedBox(height: 20),
-
-            // Username field
+            const Image(
+              image: AssetImage('assets/logo.png'),
+            ),
+            const Text(
+              'Cyberprop (v0.pa) (UKS)',
+              style: TextStyle(
+                color: Color.fromARGB(255, 233, 239, 214),
+                fontSize: 8.0,
+              ),
+            ),
+            const SizedBox(
+              height: 16.0
+            ),
             SizedBox(
-              width: MediaQuery.of(context).size.width / 3,
-              child: const Column(
+              width: MediaQuery.of(context).size.width / 2,
+              child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
@@ -26,27 +69,29 @@ class Login extends StatelessWidget {
                     style: TextStyle(
                       color: Color.fromARGB(255, 167, 86, 86),
                       fontWeight: FontWeight.bold,
-                      fontSize: 16,
+                      fontSize: 16.0,
                     ),
                   ),
-                  SizedBox(height: 8),
+                  SizedBox(
+                    height: 8.0
+                  ),
                   TextField(
                     decoration: InputDecoration(
                       filled: true,
                       fillColor: Color.fromARGB(255, 233, 239, 214),
                       border: InputBorder.none,
                     ),
+                    controller: user,
                   ),
                 ],
               ),
             ),
-
-            const SizedBox(height: 20),
-
-            // Password field
+            const SizedBox(
+              height: 16.0
+            ),
             SizedBox(
-              width: MediaQuery.of(context).size.width / 3,
-              child: const Column(
+              width: MediaQuery.of(context).size.width / 2,
+              child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
@@ -54,10 +99,10 @@ class Login extends StatelessWidget {
                     style: TextStyle(
                       color: Color.fromARGB(255, 167, 86, 86),
                       fontWeight: FontWeight.bold,
-                      fontSize: 16,
+                      fontSize: 16.0,
                     ),
                   ),
-                  SizedBox(height: 8),
+                  const SizedBox(height: 8.0),
                   TextField(
                     obscureText: true,
                     decoration: InputDecoration(
@@ -65,26 +110,42 @@ class Login extends StatelessWidget {
                       fillColor: Color.fromARGB(255, 233, 239, 214),
                       border: InputBorder.none,
                     ),
+                    controller: pass,
                   ),
                 ],
               ),
             ),
-
-            const SizedBox(height: 20),
-
-            // Login button with full width as TextField
+            const SizedBox(
+              height: 16.0
+            ),
             SizedBox(
-              width: MediaQuery.of(context).size.width / 3,
+              width: MediaQuery.of(context).size.width / 2,
               child: ElevatedButton(
-                onPressed: () {
-                  // Navigasi ke Menu setelah login berhasil
-                  Navigator.pushReplacement(
-                    context,
-                    MaterialPageRoute(builder: (context) => const Menu()),
-                  );
+                onPressed: () async {
+                  try {
+                    await FirebaseAuth.instance.signInWithEmailAndPassword(
+                      email: user.text,
+                      password: pass.text,
+                    );
+                  }
+                  on FirebaseAuthException catch (e) {
+                    setState(
+                      () {
+                        ScaffoldMessenger.of(context)
+                        .showSnackBar(
+                          SnackBar(
+                            content: Text(e.code)
+                          ),
+                        );
+                      }
+                    );
+                  }
+                  if (context.mounted) {
+                    checkAuthState(context);
+                  }
                 },
                 style: ElevatedButton.styleFrom(
-                  foregroundColor: Colors.white,
+                  foregroundColor: Color.fromARGB(255, 233, 239, 214),
                   backgroundColor: const Color.fromARGB(255, 167, 86, 86),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(0),
@@ -94,12 +155,14 @@ class Login extends StatelessWidget {
               ),
             ),
 
-            const SizedBox(height: 10),
+            const SizedBox(
+              height: 8.0
+            ),
 
             const Text(
               'Belum memiliki akun?',
               style: TextStyle(
-                color: Color.fromARGB(100, 171, 0, 0),
+                color: Color.fromARGB(255, 171, 0, 0),
                 fontWeight: FontWeight.bold,
               ),
             ),
