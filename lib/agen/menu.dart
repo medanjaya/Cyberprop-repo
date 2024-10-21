@@ -6,6 +6,7 @@ import 'login.dart';
 import 'kontak.dart';
 import 'properti.dart';
 import 'settings.dart';
+import 'tambah_produk.dart';
 
 //TODO : rencananya, menu untuk klien sama agen di satu file; pakai isAdmin nanti buat pisahkan
 bool isAdmin = false;
@@ -195,8 +196,12 @@ class _MenuState extends State<Menu> {
         ),
         floatingActionButton: FloatingActionButton(
           onPressed: () {
-            // Tindakan saat tombol tambah ditekan, misalnya menambahkan item baru
-            print('Tombol tambah ditekan');
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => const Tambah()
+              ),
+            );
           },
           child: const Icon(Icons.add),
         ),
