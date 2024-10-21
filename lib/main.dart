@@ -3,9 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
 
-import 'package:cyberphobe_project/home.dart';
-import 'package:cyberphobe_project/agen/login.dart';
-import 'package:cyberphobe_project/firebase_testcase.dart';
+import 'home.dart';
+import 'agen/login.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -23,13 +22,14 @@ class MainApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Cyberprop | Property Marketplace',
+      debugShowCheckedModeBanner: false,
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(
           seedColor: Colors.orange
         ),
         useMaterial3: false,
       ),
-      home: const TestCase(),
+      home: const Login(),
     );
   }
 }

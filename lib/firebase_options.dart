@@ -69,7 +69,7 @@ class DefaultFirebaseOptions {
     messagingSenderId: '247073690698',
     projectId: 'cyberprop-proj',
     storageBucket: 'cyberprop-proj.appspot.com',
-    iosBundleId: 'com.example.cyberphobeProject',
+    iosBundleId: 'com.cyberprop.app',
   );
 
 }

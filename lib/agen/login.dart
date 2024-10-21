@@ -12,7 +12,7 @@ class Login extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const Image(image: AssetImage('lib/assets/Logo.png')), // Pastikan ini sesuai
+            const Image(image: AssetImage('assets/logo.png')), // Pastikan ini sesuai
             const SizedBox(height: 20),
 
             // Username field

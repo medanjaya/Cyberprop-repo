@@ -1,4 +1,4 @@
-package com.example.cyberphobe_project
+package com.cyberprop.app
 
 import io.flutter.embedding.android.FlutterActivity
 
