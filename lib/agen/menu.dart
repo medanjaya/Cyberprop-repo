@@ -8,25 +8,13 @@ import 'properti.dart';
 import 'settings.dart';
 import 'tambah_produk.dart';
 
-//TODO : rencananya, menu untuk klien sama agen di satu file; pakai isAdmin nanti buat pisahkan
 bool isAdmin = false;
 
 void checkAuthState(context) {
-  FirebaseAuth.instance
-  .authStateChanges()
-  .listen(
+  FirebaseAuth.instance.authStateChanges().listen(
     (User? user) {
       if (user == null) {
-        /*Navigator.of(context)
-        .pushAndRemoveUntil(
-          MaterialPageRoute(
-            builder: (context) => const Login(),
-          ),
-          (Route route) => false
-        );*/
-      }
-      else {
-        //TODO : mau isi apa ya?
+        // Implementasi navigasi jika pengguna belum login
       }
     },
   );
@@ -41,23 +29,36 @@ class Menu extends StatefulWidget {
 
 class _MenuState extends State<Menu> {
   int selectedIndex = 0;
-  List<Map<String, dynamic>> itemList = []; 
-
-  final List<Widget> pages = const [
-    Kontak(),
-    Properti(),
-    SettingsPage(),
-  ];
+  List<Map<String, dynamic>> itemList = [];
 
   void _onItemTapped(int index) {
-    setState(
-      () {
-        selectedIndex = index;
-      }
-    );
+    setState(() {
+      selectedIndex = index;
+    });
+
+    switch (index) {
+      case 0:
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => const Kontak()),
+        );
+        break;
+      case 1:
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => const Properti()),
+        );
+        break;
+      case 2:
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => const SettingsPage()),
+        );
+        break;
+    }
   }
 
-   Future<void> _addItem() async {
+  Future<void> _addItem() async {
     final newItem = await Navigator.push(
       context,
       MaterialPageRoute(
@@ -67,12 +68,12 @@ class _MenuState extends State<Menu> {
 
     if (newItem != null) {
       setState(() {
-        itemList.add(newItem); // Menambahkan item baru ke dalam list
+        itemList.add(newItem);
       });
     }
   }
 
-   @override
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
@@ -81,16 +82,16 @@ class _MenuState extends State<Menu> {
       ),
       body: Column(
         children: [
-          Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: const Text(
+          const Padding(
+            padding: EdgeInsets.all(16.0),
+            child: Text(
               'Daftar Item',
               style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
             ),
           ),
           Expanded(
             child: ListView.builder(
-              itemCount: itemList.length, // Menggunakan panjang itemList
+              itemCount: itemList.length,
               itemBuilder: (context, index) {
                 final item = itemList[index];
                 return Container(
@@ -144,7 +145,7 @@ class _MenuState extends State<Menu> {
         ],
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: _addItem, // Panggil fungsi _addItem
+        onPressed: _addItem,
         child: const Icon(Icons.add),
       ),
       bottomNavigationBar: BottomNavigationBar(

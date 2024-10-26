@@ -102,6 +102,7 @@ class _TambahState extends State<Tambah> {
                   'Rumah/ruko',
                   'Apartemen/kondominium',
                   'Villa',
+                  'Kantor',
                   'Tanah'
                 ].map<DropdownMenuItem<String>>((String value) {
                   return DropdownMenuItem<String>(
