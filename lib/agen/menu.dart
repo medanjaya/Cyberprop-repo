@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'dart:io';
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cyberphobe_project/datahelper.dart';
 import 'kontak.dart';
 import 'settings.dart';
 import 'tambah_produk.dart';
@@ -13,12 +13,12 @@ class Menu extends StatefulWidget {
 }
 
 class _MenuState extends State<Menu> {
-  int selectedIndex = 0;
-  List<Map<String, dynamic>> itemList = [];
+  DataHelper dataHelper = DataHelper();
+  List propItem =  [];
 
   void _onItemTapped(int index) {
     setState(() {
-      selectedIndex = index;
+      //selectedIndex = index;
     });
 
     switch (index) {
@@ -41,19 +41,28 @@ class _MenuState extends State<Menu> {
   }
 
   Future<void> _addItem() async {
-    final newItem = await Navigator.push(
+    Navigator.push(
       context,
       MaterialPageRoute(
         builder: (context) => const Tambah(),
       ),
     );
-
-    if (newItem != null) {
-      setState(() {
-        itemList.add(newItem); // Tambahkan item baru ke dalam list
-      });
-    }
   }
+
+  @override
+  void initState() {
+    super.initState();
+    _loadItems();
+  }
+
+  Future<void> _loadItems() async {
+  // Assuming `DataHelper` has a method to retrieve data
+  List items = await dataHelper.fetch();  // Replace with your actual method
+  print('pening kali $items');
+  setState(() {
+    propItem = items;
+  });
+}
 
   @override
   Widget build(BuildContext context) {
@@ -61,6 +70,11 @@ class _MenuState extends State<Menu> {
       appBar: AppBar(
         title: const Text('Menu'),
         backgroundColor: const Color.fromARGB(255, 167, 86, 86),
+        actions: [
+          IconButton(onPressed: () async {
+            _loadItems();
+          }, icon: Icon(Icons.refresh))
+        ],
       ),
       body: Column(
         children: [
@@ -73,9 +87,9 @@ class _MenuState extends State<Menu> {
           ),
           Expanded(
             child: ListView.builder(
-              itemCount: itemList.length,
+              itemCount: propItem.length,
               itemBuilder: (context, index) {
-                final item = itemList[index];
+                var item = propItem[index];
                 return Container(
                   margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
                   padding: const EdgeInsets.all(16),
@@ -93,28 +107,29 @@ class _MenuState extends State<Menu> {
                   ),
                   child: Row(
                     children: [
-                      if (item['imagePath'] != null)
-                        Padding(
-                          padding: const EdgeInsets.only(right: 16.0),
-                          child: Image.file(
-                            File(item['imagePath']),
-                            width: 100,
-                            height: 100,
-                            fit: BoxFit.cover,
-                          ),
-                        ),
+                      // if (item['imagePath'] != null)
+                      //   Padding(
+                      //     padding: const EdgeInsets.only(right: 16.0),
+                      //     child: Image.file(
+                      //       File(item['imagePath']),
+                      //       width: 100,
+                      //       height: 100,
+                      //       fit: BoxFit.cover,
+                      //     ),
+                      //   ),
                       Expanded(
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              item['nama'] ?? 'Unknown',
+                              item.nama ?? 'Unknown',
                               style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                             ),
-                            Text(item['tipe'] ?? ''),
-                            Text(item['alamat'] ?? ''),
-                            Text(item['ukuran'] ?? ''),
-                            Text(item['harga'] ?? ''),
+                            Text(item.tipe ?? ''),
+                            Text(item.alamat ?? ''),
+                            Text(item.panjang.toString() ?? ''),
+                            Text(item.lebar.toString() ?? ''),
+                            Text(item.harga.toString() ?? ''),
                           ],
                         ),
                       ),
@@ -154,7 +169,7 @@ class _MenuState extends State<Menu> {
             label: 'Pengaturan',
           ),
         ],
-        currentIndex: selectedIndex,
+        //currentIndex: selectedIndex,
         onTap: _onItemTapped,
         backgroundColor: const Color.fromARGB(255, 255, 223, 183),
       ),

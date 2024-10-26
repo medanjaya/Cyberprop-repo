@@ -1,4 +1,7 @@
 import 'dart:io';
+import 'dart:typed_data';
+import 'package:cyberphobe_project/datahelper.dart';
+import 'package:cyberphobe_project/model/model.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 
@@ -10,6 +13,8 @@ class Tambah extends StatefulWidget {
 }
 
 class _TambahState extends State<Tambah> {
+  DataHelper dataHelper = DataHelper();
+
   String dropdownValue = 'Rumah/ruko'; // Initial selection for dropdown menu
   XFile? _image; // Declaration for image file
   int _selectedIndex = 0; // Add selected index for BottomNavigationBar
@@ -217,18 +222,20 @@ class _TambahState extends State<Tambah> {
               const SizedBox(height: 16),
               Center(
                 child: ElevatedButton(
-                  onPressed: () {
-                    Map<String, dynamic> newItem = {
-                      'nama': _namaController.text, // Ambil dari controller
-                      'tipe': dropdownValue,
-                      'alamat': _alamatController.text, // Ambil dari controller
-                      'ukuran': '${_panjangController.text} x ${_lebarController.text}', // Ambil dari controller
-                      'deskripsi': _deskripsiController.text, // Ambil dari controller
-                      'harga': _hargaController.text, // Ambil dari controller
-                      'imagePath': _image?.path // Ambil dari gambar yang dipilih
-                    };
-
-                    Navigator.pop(context, newItem); // Mengembalikan data ke halaman sebelumnya
+                  onPressed: () async{
+                    int idproperti = await dataHelper.insert(
+                      Prop(
+                      nama: _namaController.text, // Ambil dari controller
+                      tipe: dropdownValue,
+                      alamat: _alamatController.text, // Ambil dari controller
+                      panjang: int.parse(_panjangController.text),
+                      lebar: int.parse(_lebarController.text), // Ambil dari controller
+                      deskripsi: _deskripsiController.text, // Ambil dari controller
+                      harga: int.parse(_hargaController.text), // Ambil dari controller
+                      gambar: Uint8List(0) //TODO : nanti ganti ke yang pas
+                      )
+                    );
+                    Navigator.pop(context); // Mengembalikan data ke halaman sebelumnya
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: const Color.fromARGB(255, 167, 86, 86),
