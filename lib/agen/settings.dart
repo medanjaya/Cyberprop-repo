@@ -59,7 +59,7 @@ class _SettingsState extends State<Settings> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                const Text('Dark Mode Theme'),
+                const Text('Light / Dark Mode Theme'),
                 Switch(
                   value: prov.enableDarkMode,
                   activeColor: const Color.fromARGB(255, 99, 185, 255),
