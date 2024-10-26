@@ -203,8 +203,16 @@ class _TambahState extends State<Tambah> {
               Center(
                 child: ElevatedButton(
                   onPressed: () {
-                    Navigator.pushReplacementNamed(context, '/menu');
-                  },
+  Map<String, dynamic> newItem = {
+    'nama': 'Nama Properti', // Ganti sesuai dengan data yang diinput
+    'tipe': dropdownValue,
+    'alamat': 'Alamat Properti',
+    'ukuran': '20x30', // contoh ukuran
+    'harga': 'Rp 100.000.000',
+  };
+
+  Navigator.pop(context, newItem); // Mengembalikan data ke halaman sebelumnya
+},
                   style: ElevatedButton.styleFrom(
                     backgroundColor: const Color.fromARGB(255, 167, 86, 86),
                     padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 12),
