@@ -1,4 +1,4 @@
-import 'package:cyberphobe_project/agen/settings_provider.dart';
+import 'package:cyberphobe_project/provider/lightdark_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
@@ -13,7 +13,7 @@ void main() async {
 
   runApp(
     ChangeNotifierProvider(
-      create: (context) => SettingsProvider(),
+      create: (context) => LightdarkProvider(),
       child: const MainApp(),
     ),
   );
@@ -24,7 +24,7 @@ class MainApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final prov = Provider.of<SettingsProvider>(context);
+    final prov = Provider.of<LightdarkProvider>(context);
     return MaterialApp(
       title: 'Cyberprop | Property Marketplace',
       debugShowCheckedModeBanner: false,

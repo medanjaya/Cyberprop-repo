@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-class SettingsProvider with ChangeNotifier {
+class LightdarkProvider with ChangeNotifier {
   bool _enableDarkMode = false;
 
   bool get enableDarkMode => _enableDarkMode;

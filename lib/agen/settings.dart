@@ -1,4 +1,4 @@
-import 'package:cyberphobe_project/agen/settings_provider.dart';
+import 'package:cyberphobe_project/provider/lightdark_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:cyberphobe_project/agen/kontak.dart'; // Import the Kontak page
@@ -39,7 +39,7 @@ class _SettingsState extends State<Settings> {
 
   @override
   Widget build(BuildContext context) {
-    final prov = Provider.of<SettingsProvider>(context);
+    final prov = Provider.of<LightdarkProvider>(context);
     return Scaffold(
       appBar: AppBar(
         title: const Text('Pengaturan'),
