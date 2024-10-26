@@ -1,6 +1,6 @@
 import 'dart:typed_data'; // Import this to use Uint8List
 
-class prop {
+class Prop {
   int? id;
   String nama;
   Uint8List gambar;
@@ -8,9 +8,10 @@ class prop {
   String alamat;
   int panjang;
   int lebar;
+  String deskripsi;
   int harga;
 
-  prop({
+  Prop({
     this.id,
     required this.nama,
     required this.gambar,
@@ -18,12 +19,13 @@ class prop {
     required this.alamat,
     required this.panjang,
     required this.lebar,
+    required this.deskripsi,
     required this.harga,
   });
 
   // Convert from Map to Property object
-  factory prop.fromMap(Map<String, dynamic> map) {
-    return prop(
+  factory Prop.fromMap(Map<String, dynamic> map) {
+    return Prop(
       id: map['id'],
       nama: map['nama'],
       gambar: map['gambar'], // Assuming it's stored as Uint8List (BLOB)
@@ -31,6 +33,7 @@ class prop {
       alamat: map['alamat'],
       panjang: map['panjang'],
       lebar: map['lebar'],
+      deskripsi: map['deskripsi'],
       harga: map['harga'],
     );
   }

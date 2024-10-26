@@ -5,7 +5,7 @@ import 'dart:typed_data';
 
 class DataHelper {
   Database? database;
-  String DATABASE_NAME = "PROPERTY_DB"; // Renamed to fit your model context
+  String TABLE_NAME = "PROPERTY_DB"; // Renamed to fit your model context
   int databaseVersion = 1;
 
   DataHelper() {
@@ -22,7 +22,7 @@ class DataHelper {
   Future<Database> initDatabase() async {
     String path = await getDatabasesPath();
     return openDatabase(
-      join(path, DATABASE_NAME),
+      join(path, TABLE_NAME),
       version: databaseVersion,
       onCreate: createDatabase,
     );
@@ -38,24 +38,43 @@ class DataHelper {
           alamat TEXT,
           panjang INTEGER,
           lebar INTEGER,
+          deskripsi TEXT,
           harga INTEGER
         )'''); // Adjusted to match the `prop` class
   }
+  Future<int> insertProp(Prop prop) async {
+    final db = await checkDatabase();
+    return await db.insert(
+      TABLE_NAME,
+      prop.toMap(), // Use the model's toMap function
+      conflictAlgorithm: ConflictAlgorithm.replace,
+    );
+  }
+
 
   // Fetch all properties
-  Future<List<prop>> fetch() async {
-    List<Map<String, dynamic>> data = await database!.query("Property");
-    return data.map((e) => prop.fromMap(e)).toList();
+  Future<List<Prop>> getProps() async {
+    final db = database;
+    final List<Map<String, dynamic>> maps = await db!.query('properties');
+
+    return List.generate(maps.length, (i) {
+      return Prop(
+        id: maps[i]['id'],
+        nama: maps[i]['nama'],
+        tipe: maps[i]['tipe'],
+        alamat: maps[i]['alamat'],
+        panjang: maps[i]['panjang'],
+        lebar: maps[i]['lebar'],
+        deskripsi: maps[i]['deskripsi'],
+        harga: maps[i]['harga'],
+        gambar: maps[i]['gambar'],
+      );
+    });
   }
 
-  // Insert a new property
-  Future<int> insert(prop property) async {
-    int id = await database!.insert("Property", property.toMap());
-    return id;
-  }
 
   // Update an existing property
-  Future<int> update(prop property, int id) async {
+  Future<int> update(Prop property, int id) async {
     int rowsAffected = await database!.update(
       "Property",
       property.toMap(),

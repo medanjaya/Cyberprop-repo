@@ -1,6 +1,9 @@
+import 'dart:typed_data';
+
+import 'package:cyberphobe_project/model/model.dart';
+import 'package:cyberphobe_project/sqflite.dart';
 import 'package:flutter/material.dart';
 import 'dart:io';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'kontak.dart';
 import 'settings.dart';
 import 'tambah_produk.dart';
@@ -15,6 +18,28 @@ class Menu extends StatefulWidget {
 class _MenuState extends State<Menu> {
   int selectedIndex = 0;
   List<Map<String, dynamic>> itemList = [];
+
+  @override
+  void initState() {
+    super.initState();
+    _loadItems(); // Load items when the menu is initialized
+  }
+
+  Future<void> _loadItems() async {
+    DataHelper dataHelper = DataHelper();
+    List<Prop> props = await dataHelper.getProps();
+    setState(() {
+      itemList = props.map((prop) => {
+        'nama': prop.nama,
+        'tipe': prop.tipe,
+        'alamat': prop.alamat,
+        'ukuran': prop.panjang * prop.lebar,
+        'deskripsi': prop.deskripsi,
+        'harga': prop.harga,
+        'imagePath': prop.gambar != null ? prop.gambar.toString() : null,
+      }).toList();
+    });
+  }
 
   void _onItemTapped(int index) {
     setState(() {
@@ -49,9 +74,20 @@ class _MenuState extends State<Menu> {
     );
 
     if (newItem != null) {
-      setState(() {
-        itemList.add(newItem); // Tambahkan item baru ke dalam list
-      });
+      DataHelper dataHelper = DataHelper();
+      // Create a Prop instance
+      Prop newProp = Prop(
+        nama: newItem['nama'],
+        tipe: newItem['tipe'],
+        alamat: newItem['alamat'],
+        panjang: newItem['panjang'],
+        lebar: newItem['lebar'],
+        deskripsi: newItem['deskripsi'],
+        harga: int.parse(newItem['harga']),
+        gambar:  Uint8List.fromList(await File(newItem['imagePath']).readAsBytes()),
+      );
+      await dataHelper.insertProp(newProp); // Insert into the database
+      _loadItems(); // Reload the items from the database
     }
   }
 
