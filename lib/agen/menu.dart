@@ -5,18 +5,6 @@ import 'kontak.dart';
 import 'settings.dart';
 import 'tambah_produk.dart';
 
-bool isAdmin = false;
-
-void checkAuthState(BuildContext context) {
-  FirebaseAuth.instance.authStateChanges().listen(
-    (User? user) {
-      if (user == null) {
-        // Implementasi navigasi jika pengguna belum login
-      }
-    },
-  );
-}
-
 class Menu extends StatefulWidget {
   const Menu({super.key});
 
@@ -33,7 +21,6 @@ class _MenuState extends State<Menu> {
       selectedIndex = index;
     });
 
-    // Use Navigator.pushReplacement to avoid stacking the same page
     switch (index) {
       case 0:
         Navigator.pushReplacement(
@@ -63,7 +50,7 @@ class _MenuState extends State<Menu> {
 
     if (newItem != null) {
       setState(() {
-        itemList.add(newItem);
+        itemList.add(newItem); // Tambahkan item baru ke dalam list
       });
     }
   }
@@ -106,7 +93,7 @@ class _MenuState extends State<Menu> {
                   ),
                   child: Row(
                     children: [
-                      if (item['imagePath'] != null) // Check if the image path is available
+                      if (item['imagePath'] != null)
                         Padding(
                           padding: const EdgeInsets.only(right: 16.0),
                           child: Image.file(

@@ -14,6 +14,14 @@ class _TambahState extends State<Tambah> {
   XFile? _image; // Declaration for image file
   int _selectedIndex = 0; // Add selected index for BottomNavigationBar
 
+  // Controllers for each TextField
+  final TextEditingController _namaController = TextEditingController();
+  final TextEditingController _alamatController = TextEditingController();
+  final TextEditingController _panjangController = TextEditingController();
+  final TextEditingController _lebarController = TextEditingController();
+  final TextEditingController _deskripsiController = TextEditingController();
+  final TextEditingController _hargaController = TextEditingController();
+
   Future<void> _pickImage() async {
     final picker = ImagePicker();
     final pickedFile = await picker.pickImage(source: ImageSource.gallery);
@@ -54,6 +62,7 @@ class _TambahState extends State<Tambah> {
               ),
               const SizedBox(height: 8),
               TextField(
+                controller: _namaController, // Set controller
                 decoration: const InputDecoration(
                   filled: true,
                   fillColor: Color.fromARGB(255, 233, 239, 214),
@@ -122,6 +131,7 @@ class _TambahState extends State<Tambah> {
               ),
               const SizedBox(height: 8),
               TextField(
+                controller: _alamatController, // Set controller
                 decoration: const InputDecoration(
                   filled: true,
                   fillColor: Color.fromARGB(255, 233, 239, 214),
@@ -142,6 +152,7 @@ class _TambahState extends State<Tambah> {
                 children: [
                   Expanded(
                     child: TextField(
+                      controller: _panjangController, // Set controller
                       decoration: const InputDecoration(
                         labelText: 'Panjang (meter)',
                         filled: true,
@@ -154,6 +165,7 @@ class _TambahState extends State<Tambah> {
                   const SizedBox(width: 16),
                   Expanded(
                     child: TextField(
+                      controller: _lebarController, // Set controller
                       decoration: const InputDecoration(
                         labelText: 'Lebar (meter)',
                         filled: true,
@@ -176,6 +188,7 @@ class _TambahState extends State<Tambah> {
               ),
               const SizedBox(height: 8),
               TextField(
+                controller: _deskripsiController, // Set controller
                 decoration: const InputDecoration(
                   filled: true,
                   fillColor: Color.fromARGB(255, 233, 239, 214),
@@ -192,6 +205,7 @@ class _TambahState extends State<Tambah> {
               ),
               const SizedBox(height: 8),
               TextField(
+                controller: _hargaController, // Set controller
                 decoration: const InputDecoration(
                   prefixText: 'Rp ',
                   filled: true,
@@ -204,17 +218,18 @@ class _TambahState extends State<Tambah> {
               Center(
                 child: ElevatedButton(
                   onPressed: () {
-  Map<String, dynamic> newItem = {
-    'nama': 'Nama Properti', // Ganti sesuai dengan data yang diinput
-    'tipe': dropdownValue,
-    'alamat': 'Alamat Properti',
-    'ukuran': '20x30', // contoh ukuran
-    'harga': 'Rp 100.000.000',
-    'imagePath': _image?.path
-  };
+                    Map<String, dynamic> newItem = {
+                      'nama': _namaController.text, // Ambil dari controller
+                      'tipe': dropdownValue,
+                      'alamat': _alamatController.text, // Ambil dari controller
+                      'ukuran': '${_panjangController.text} x ${_lebarController.text}', // Ambil dari controller
+                      'deskripsi': _deskripsiController.text, // Ambil dari controller
+                      'harga': _hargaController.text, // Ambil dari controller
+                      'imagePath': _image?.path // Ambil dari gambar yang dipilih
+                    };
 
-  Navigator.pop(context, newItem); // Mengembalikan data ke halaman sebelumnya
-},
+                    Navigator.pop(context, newItem); // Mengembalikan data ke halaman sebelumnya
+                  },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: const Color.fromARGB(255, 167, 86, 86),
                     padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 12),
