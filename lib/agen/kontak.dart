@@ -85,7 +85,7 @@ class Kontak extends StatelessWidget {
             case 2: // Navigate to Settings or another screen
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => const SettingsPage()),
+                MaterialPageRoute(builder: (context) => const Settings()),
               );
               break;
           }

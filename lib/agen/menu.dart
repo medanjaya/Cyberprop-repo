@@ -34,7 +34,7 @@ class _MenuState extends State<Menu> {
       case 2:
         Navigator.pushReplacement(
           context,
-          MaterialPageRoute(builder: (context) => const SettingsPage()),
+          MaterialPageRoute(builder: (context) => const Settings()),
         );
         break;
     }
