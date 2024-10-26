@@ -210,6 +210,7 @@ class _TambahState extends State<Tambah> {
     'alamat': 'Alamat Properti',
     'ukuran': '20x30', // contoh ukuran
     'harga': 'Rp 100.000.000',
+    'imagePath': _image?.path
   };
 
   Navigator.pop(context, newItem); // Mengembalikan data ke halaman sebelumnya

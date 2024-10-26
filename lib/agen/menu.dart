@@ -1,16 +1,13 @@
 import 'package:flutter/material.dart';
-
+import 'dart:io';
 import 'package:firebase_auth/firebase_auth.dart';
-
-import 'login.dart';
 import 'kontak.dart';
-import 'properti.dart';
 import 'settings.dart';
 import 'tambah_produk.dart';
 
 bool isAdmin = false;
 
-void checkAuthState(context) {
+void checkAuthState(BuildContext context) {
   FirebaseAuth.instance.authStateChanges().listen(
     (User? user) {
       if (user == null) {
@@ -36,21 +33,19 @@ class _MenuState extends State<Menu> {
       selectedIndex = index;
     });
 
+    // Use Navigator.pushReplacement to avoid stacking the same page
     switch (index) {
       case 0:
-        Navigator.push(
+        Navigator.pushReplacement(
           context,
           MaterialPageRoute(builder: (context) => const Kontak()),
         );
         break;
       case 1:
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => const Properti()),
-        );
+        // No need to navigate to the same Menu page
         break;
       case 2:
-        Navigator.push(
+        Navigator.pushReplacement(
           context,
           MaterialPageRoute(builder: (context) => const SettingsPage()),
         );
@@ -110,8 +105,17 @@ class _MenuState extends State<Menu> {
                     ],
                   ),
                   child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
+                      if (item['imagePath'] != null) // Check if the image path is available
+                        Padding(
+                          padding: const EdgeInsets.only(right: 16.0),
+                          child: Image.file(
+                            File(item['imagePath']),
+                            width: 100,
+                            height: 100,
+                            fit: BoxFit.cover,
+                          ),
+                        ),
                       Expanded(
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,

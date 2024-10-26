@@ -1,6 +1,8 @@
+import 'package:cyberphobe_project/agen/settings.dart';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart'; // Tambahkan ini
+import 'menu.dart'; // Pastikan Anda mengimpor Menu
 
 class Kontak extends StatelessWidget {
   const Kontak({super.key});
@@ -27,31 +29,68 @@ class Kontak extends StatelessWidget {
                 _buildContactTile(
                   context,
                   'WhatsApp',
-                  FontAwesomeIcons.whatsapp, // Gunakan FontAwesome untuk WhatsApp
+                  FontAwesomeIcons.whatsapp,
                   'https://wa.me/0123456789', // Ganti dengan nomor WhatsApp yang sesuai
                 ),
                 _buildContactTile(
                   context,
                   'Instagram',
-                  FontAwesomeIcons.instagram, // Gunakan FontAwesome untuk Instagram
+                  FontAwesomeIcons.instagram,
                   'https://www.instagram.com/username/', // Ganti dengan username Instagram yang sesuai
                 ),
                 _buildContactTile(
                   context,
                   'Facebook',
-                  FontAwesomeIcons.facebook, // Gunakan FontAwesome untuk Facebook
+                  FontAwesomeIcons.facebook,
                   'https://www.facebook.com/username/', // Ganti dengan username Facebook yang sesuai
                 ),
                 _buildContactTile(
                   context,
                   'X',
-                  FontAwesomeIcons.x, // Gunakan FontAwesome untuk X (Twitter)
+                  FontAwesomeIcons.x,
                   'https://twitter.com/username/', // Ganti dengan username X yang sesuai
                 ),
               ],
             ),
           ),
         ],
+      ),
+      bottomNavigationBar: BottomNavigationBar(
+        items: const <BottomNavigationBarItem>[
+          BottomNavigationBarItem(
+            icon: Icon(Icons.chat),
+            label: 'Kontak',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.business),
+            label: 'Properti',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.settings),
+            label: 'Pengaturan',
+          ),
+        ],
+        currentIndex: 0, // Set current index as needed
+        onTap: (index) {
+          switch (index) {
+            case 0: // Kontak
+              // Already on Kontak screen
+              break;
+            case 1: // Navigate to Menu
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const Menu()),
+              );
+              break;
+            case 2: // Navigate to Settings or another screen
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const SettingsPage()),
+              );
+              break;
+          }
+        },
+        backgroundColor: const Color.fromARGB(255, 255, 223, 183),
       ),
     );
   }
