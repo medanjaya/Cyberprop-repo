@@ -1,5 +1,7 @@
 import 'dart:io';
 import 'dart:typed_data';
+import 'package:cyberphobe_project/agen/kontak.dart';
+import 'package:cyberphobe_project/agen/settings.dart';
 import 'package:cyberphobe_project/datahelper.dart';
 import 'package:cyberphobe_project/model/model.dart';
 import 'package:flutter/material.dart';
@@ -35,10 +37,34 @@ class _TambahState extends State<Tambah> {
     });
   }
 
+  Uint8List? _imageToBytes() {
+    if (_image != null) {
+      return File(_image!.path).readAsBytesSync();
+    }
+    return null;
+  }
+
   void _onItemTapped(int index) {
     setState(() {
       _selectedIndex = index;
     });
+
+    switch (index) {
+      case 0:
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => const Kontak()),
+        );
+        break;
+      case 1:
+        break; // Tidak perlu navigasi ulang ke halaman yang sama
+      case 2:
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => const Settings()),
+        );
+        break;
+    }
   }
 
   @override
@@ -67,7 +93,7 @@ class _TambahState extends State<Tambah> {
               ),
               const SizedBox(height: 8),
               TextField(
-                controller: _namaController, // Set controller
+                controller: _namaController,
                 decoration: const InputDecoration(
                   filled: true,
                   fillColor: Color.fromARGB(255, 233, 239, 214),
@@ -136,7 +162,7 @@ class _TambahState extends State<Tambah> {
               ),
               const SizedBox(height: 8),
               TextField(
-                controller: _alamatController, // Set controller
+                controller: _alamatController,
                 decoration: const InputDecoration(
                   filled: true,
                   fillColor: Color.fromARGB(255, 233, 239, 214),
@@ -157,7 +183,7 @@ class _TambahState extends State<Tambah> {
                 children: [
                   Expanded(
                     child: TextField(
-                      controller: _panjangController, // Set controller
+                      controller: _panjangController,
                       decoration: const InputDecoration(
                         labelText: 'Panjang (meter)',
                         filled: true,
@@ -170,7 +196,7 @@ class _TambahState extends State<Tambah> {
                   const SizedBox(width: 16),
                   Expanded(
                     child: TextField(
-                      controller: _lebarController, // Set controller
+                      controller: _lebarController,
                       decoration: const InputDecoration(
                         labelText: 'Lebar (meter)',
                         filled: true,
@@ -193,13 +219,14 @@ class _TambahState extends State<Tambah> {
               ),
               const SizedBox(height: 8),
               TextField(
-                controller: _deskripsiController, // Set controller
+                controller: _deskripsiController,
                 decoration: const InputDecoration(
                   filled: true,
                   fillColor: Color.fromARGB(255, 233, 239, 214),
                   border: InputBorder.none,
                 ),
               ),
+              const SizedBox(height: 16),
               const Text(
                 'Harga',
                 style: TextStyle(
@@ -210,7 +237,7 @@ class _TambahState extends State<Tambah> {
               ),
               const SizedBox(height: 8),
               TextField(
-                controller: _hargaController, // Set controller
+                controller: _hargaController,
                 decoration: const InputDecoration(
                   prefixText: 'Rp ',
                   filled: true,
@@ -222,20 +249,21 @@ class _TambahState extends State<Tambah> {
               const SizedBox(height: 16),
               Center(
                 child: ElevatedButton(
-                  onPressed: () async{
+                  onPressed: () async {
+                    Uint8List? imageBytes = _imageToBytes();
                     int idproperti = await dataHelper.insert(
                       Prop(
-                      nama: _namaController.text, // Ambil dari controller
-                      tipe: dropdownValue,
-                      alamat: _alamatController.text, // Ambil dari controller
-                      panjang: int.parse(_panjangController.text),
-                      lebar: int.parse(_lebarController.text), // Ambil dari controller
-                      deskripsi: _deskripsiController.text, // Ambil dari controller
-                      harga: int.parse(_hargaController.text), // Ambil dari controller
-                      gambar: Uint8List(0) //TODO : nanti ganti ke yang pas
-                      )
+                        nama: _namaController.text,
+                        tipe: dropdownValue,
+                        alamat: _alamatController.text,
+                        panjang: int.parse(_panjangController.text),
+                        lebar: int.parse(_lebarController.text),
+                        deskripsi: _deskripsiController.text,
+                        harga: int.parse(_hargaController.text),
+                        gambar: imageBytes ?? Uint8List(0),
+                      ),
                     );
-                    Navigator.pop(context); // Mengembalikan data ke halaman sebelumnya
+                    Navigator.pop(context, true); // Mengirim sinyal refresh
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: const Color.fromARGB(255, 167, 86, 86),
@@ -271,7 +299,7 @@ class _TambahState extends State<Tambah> {
         ],
         currentIndex: _selectedIndex,
         onTap: _onItemTapped,
-        backgroundColor: const Color.fromARGB(255, 255, 223, 183),
+        selectedItemColor: const Color.fromARGB(255, 167, 86, 86),
       ),
     );
   }
