@@ -5,14 +5,14 @@ import 'package:cyberphobe_project/agen/kontak.dart'; // Import the Kontak page
 import 'package:cyberphobe_project/agen/menu.dart'; // Import the Menu (Properti) page
 
 class Settings extends StatefulWidget {
-  const Settings({Key? key}) : super(key: key);
+  const Settings({super.key});
 
   @override
   State<Settings> createState() => _SettingsState();
 }
 
 class _SettingsState extends State<Settings> {
-  int _selectedIndex = 2; // Default to the Settings page
+  int _selectedIndex = 2; // TODO : nanti kita hapus
 
   void _onItemTapped(int index) {
     setState(() {
@@ -90,7 +90,7 @@ class _SettingsState extends State<Settings> {
             label: 'Pengaturan',
           ),
         ],
-        currentIndex: _selectedIndex,
+        currentIndex: 2,
         onTap: _onItemTapped, // Call the navigation method
         backgroundColor: const Color.fromARGB(255, 255, 223, 183),
       ),

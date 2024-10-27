@@ -1,9 +1,15 @@
+import 'package:cyberphobe_project/agen/login.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'dart:io';
-import 'package:cyberphobe_project/datahelper.dart';
+
+import '../datahelper.dart';
 import 'kontak.dart';
 import 'settings.dart';
 import 'tambah_produk.dart';
+
+//TODO : rencananya, menu untuk klien sama agen di satu file; pakai isAdmin nanti buat pisahkan
+bool isAdmin = false;
+
 
 class Menu extends StatefulWidget {
   const Menu({super.key});
@@ -21,7 +27,7 @@ class _MenuState extends State<Menu> {
       //selectedIndex = index;
     });
 
-    switch (index) {
+    switch (index) { //TODO : cek ini nanti
       case 0:
         Navigator.pushReplacement(
           context,
@@ -58,7 +64,6 @@ class _MenuState extends State<Menu> {
   Future<void> _loadItems() async {
   // Assuming `DataHelper` has a method to retrieve data
   List items = await dataHelper.fetch();  // Replace with your actual method
-  print('pening kali $items');
   setState(() {
     propItem = items;
   });
@@ -71,6 +76,39 @@ class _MenuState extends State<Menu> {
         title: const Text('Menu'),
         backgroundColor: const Color.fromARGB(255, 167, 86, 86),
         actions: [
+          Builder(
+            builder: (context) {
+              if (isAdmin) {
+                return IconButton(
+                  onPressed: () async {
+                    await FirebaseAuth.instance.signOut();
+                    if (context.mounted) {
+                      checkAuthState(context);
+                    }
+                    setState(
+                      () {
+                        //TODO : hapus nanti
+                      }
+                    );
+                  },
+                  icon: const Icon(Icons.login)
+                );
+              }
+              else {
+                return IconButton(
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const Login()
+                      ),
+                    );
+                  },
+                  icon: const Icon(Icons.logout)
+                );
+              }
+            }
+          ),
           IconButton(onPressed: () async {
             _loadItems();
           }, icon: Icon(Icons.refresh))
@@ -127,9 +165,9 @@ class _MenuState extends State<Menu> {
                             ),
                             Text(item.tipe ?? ''),
                             Text(item.alamat ?? ''),
-                            Text(item.panjang.toString() ?? ''),
-                            Text(item.lebar.toString() ?? ''),
-                            Text(item.harga.toString() ?? ''),
+                            Text(item.panjang.toString()),
+                            Text(item.lebar.toString()),
+                            Text(item.harga.toString()),
                           ],
                         ),
                       ),
@@ -169,7 +207,7 @@ class _MenuState extends State<Menu> {
             label: 'Pengaturan',
           ),
         ],
-        //currentIndex: selectedIndex,
+        currentIndex: 1,
         onTap: _onItemTapped,
         backgroundColor: const Color.fromARGB(255, 255, 223, 183),
       ),

@@ -1,9 +1,12 @@
-import 'package:cyberphobe_project/provider/lightdark_provider.dart';
 import 'package:flutter/material.dart';
+
 import 'package:firebase_core/firebase_core.dart';
-import 'firebase_options.dart';
-import 'agen/menu.dart';
 import 'package:provider/provider.dart';
+
+import 'firebase_options.dart';
+
+import 'agen/menu.dart';
+import 'provider/lightdark_provider.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -24,12 +27,15 @@ class MainApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final prov = Provider.of<LightdarkProvider>(context);
+    final provider = Provider.of<LightdarkProvider>(context);
     return MaterialApp(
       title: 'Cyberprop | Property Marketplace',
       debugShowCheckedModeBanner: false,
-      theme: prov.enableDarkMode 
-          ? ThemeData.dark() 
+      theme: provider.enableDarkMode 
+          ? ThemeData(
+            colorScheme: ColorScheme.dark(),
+            useMaterial3: false, //TODO : DRY; nanti kita keluarkan
+          ) 
           : ThemeData(
               colorScheme: ColorScheme.fromSeed(
                 seedColor: Colors.orange,

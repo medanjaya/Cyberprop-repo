@@ -23,12 +23,12 @@ class Prop {
     required this.harga,
   });
 
-  // Convert from Map to Property object
+  //TODO : Convert from Map to Property object
   factory Prop.fromMap(Map<String, dynamic> map) {
     return Prop(
       id: map['id'],
       nama: map['nama'],
-      gambar: map['gambar'], // Assuming it's stored as Uint8List (BLOB)
+      gambar: map['gambar'], //TODO : Assuming it's stored as Uint8List (BLOB)
       tipe: map['tipe'],
       alamat: map['alamat'],
       panjang: map['panjang'],
@@ -38,7 +38,7 @@ class Prop {
     );
   }
 
-  // Convert Property object to Map
+  //TODO : Convert Property object to Map
   Map<String, dynamic> toMap() {
     return {
       'id': id,

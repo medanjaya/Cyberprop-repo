@@ -17,7 +17,7 @@ class _TambahState extends State<Tambah> {
 
   String dropdownValue = 'Rumah/ruko'; // Initial selection for dropdown menu
   XFile? _image; // Declaration for image file
-  int _selectedIndex = 0; // Add selected index for BottomNavigationBar
+  int _selectedIndex = 1; // Add selected index for BottomNavigationBar
 
   // Controllers for each TextField
   final TextEditingController _namaController = TextEditingController();
@@ -223,19 +223,21 @@ class _TambahState extends State<Tambah> {
               Center(
                 child: ElevatedButton(
                   onPressed: () async{
-                    int idproperti = await dataHelper.insert(
+                    await dataHelper.insert(
                       Prop(
-                      nama: _namaController.text, // Ambil dari controller
+                      nama: _namaController.text,
                       tipe: dropdownValue,
-                      alamat: _alamatController.text, // Ambil dari controller
+                      alamat: _alamatController.text,
                       panjang: int.parse(_panjangController.text),
-                      lebar: int.parse(_lebarController.text), // Ambil dari controller
-                      deskripsi: _deskripsiController.text, // Ambil dari controller
-                      harga: int.parse(_hargaController.text), // Ambil dari controller
+                      lebar: int.parse(_lebarController.text),
+                      deskripsi: _deskripsiController.text,
+                      harga: int.parse(_hargaController.text),
                       gambar: Uint8List(0) //TODO : nanti ganti ke yang pas
                       )
                     );
-                    Navigator.pop(context); // Mengembalikan data ke halaman sebelumnya
+                    if (context.mounted) {
+                      Navigator.pop(context);
+                    }
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: const Color.fromARGB(255, 167, 86, 86),
