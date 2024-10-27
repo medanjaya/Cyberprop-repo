@@ -1,8 +1,8 @@
-import 'package:cyberphobe_project/provider/lightdark_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:cyberphobe_project/agen/kontak.dart'; // Import the Kontak page
-import 'package:cyberphobe_project/agen/menu.dart'; // Import the Menu (Properti) page
+
+import '../provider/lightdark_provider.dart';
+import 'bottom_nav.dart';
 
 class Settings extends StatefulWidget {
   const Settings({super.key});
@@ -12,31 +12,6 @@ class Settings extends StatefulWidget {
 }
 
 class _SettingsState extends State<Settings> {
-  int _selectedIndex = 2; // TODO : nanti kita hapus
-
-  void _onItemTapped(int index) {
-    setState(() {
-      _selectedIndex = index; // Update the selected index
-    });
-
-    switch (index) {
-      case 0: // Navigate to Kontak
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (context) => const Kontak()),
-        );
-        break;
-      case 1: // Navigate to Menu (Properti)
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (context) => const Menu()),
-        );
-        break;
-      case 2: // Already on Settings screen, no action needed
-        break;
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     final prov = Provider.of<LightdarkProvider>(context);
@@ -75,25 +50,7 @@ class _SettingsState extends State<Settings> {
           ],
         ),
       ),
-      bottomNavigationBar: BottomNavigationBar(
-        items: const <BottomNavigationBarItem>[
-          BottomNavigationBarItem(
-            icon: Icon(Icons.chat),
-            label: 'Kontak',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.business),
-            label: 'Properti',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.settings),
-            label: 'Pengaturan',
-          ),
-        ],
-        currentIndex: 2,
-        onTap: _onItemTapped, // Call the navigation method
-        backgroundColor: const Color.fromARGB(255, 255, 223, 183),
-      ),
+      bottomNavigationBar: CustomBottomNavigationBar(i: 2),
     );
   }
 }

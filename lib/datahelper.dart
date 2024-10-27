@@ -46,6 +46,7 @@ class DataHelper {
     List data = await database!.query('Property');
     List<Prop> proper = data.map(
       (e) => Prop(
+        id: e['id'],
         nama: e['nama'],
         gambar: e['gambar'],
         tipe: e['tipe'],
@@ -75,10 +76,10 @@ class DataHelper {
     return idproperti;
   }
 
-  Future<int> update(Prop property, int id) async {
+  Future<int> update(Prop prop, int id) async {
     int rowsAffected = await database!.update(
       'Property',
-      property.toMap(),
+      prop.toMap(),
       where: 'id = ?',
       whereArgs: [id],
     );

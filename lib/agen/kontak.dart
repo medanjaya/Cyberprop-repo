@@ -1,8 +1,9 @@
-import 'package:cyberphobe_project/agen/settings.dart';
 import 'package:flutter/material.dart';
+
 import 'package:url_launcher/url_launcher.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart'; // Tambahkan ini
-import 'menu.dart'; // Pastikan Anda mengimpor Menu
+
+import 'bottom_nav.dart';
 
 class Kontak extends StatelessWidget {
   const Kontak({super.key});
@@ -55,43 +56,7 @@ class Kontak extends StatelessWidget {
           ),
         ],
       ),
-      bottomNavigationBar: BottomNavigationBar(
-        items: const <BottomNavigationBarItem>[
-          BottomNavigationBarItem(
-            icon: Icon(Icons.chat),
-            label: 'Kontak',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.business),
-            label: 'Properti',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.settings),
-            label: 'Pengaturan',
-          ),
-        ],
-        currentIndex: 0, // Set current index as needed
-        onTap: (index) {
-          switch (index) {
-            case 0: // Kontak
-              // Already on Kontak screen
-              break;
-            case 1: // Navigate to Menu
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => const Menu()),
-              );
-              break;
-            case 2: // Navigate to Settings or another screen
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => const Settings()),
-              );
-              break;
-          }
-        },
-        backgroundColor: const Color.fromARGB(255, 255, 223, 183),
-      ),
+      bottomNavigationBar: CustomBottomNavigationBar(i: 0),
     );
   }
 

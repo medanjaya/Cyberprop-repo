@@ -1,26 +1,23 @@
-import 'dart:io';
 import 'dart:typed_data';
-import 'package:flutter/material.dart';
 
-import 'package:image_picker/image_picker.dart';
+import 'package:flutter/material.dart';
 
 import '../datahelper.dart';
 import '../model/model.dart';
 
+class EditProduk extends StatefulWidget {
+  final Prop item; // Menerima item yang akan diedit
 
-class Tambah extends StatefulWidget {
-  const Tambah({super.key});
+  const EditProduk({super.key, required this.item});
 
   @override
-  State<Tambah> createState() => _TambahState();
+  State<EditProduk> createState() => _EditProdukState();
 }
 
-class _TambahState extends State<Tambah> {
-  DataHelper dataHelper = DataHelper();
-
-  String dropdownValue = 'Rumah/ruko';
-  XFile? _image;
+class _EditProdukState extends State<EditProduk> {
+  final DataHelper dataHelper = DataHelper();
   
+  String dropdownValue = '';
   final TextEditingController _namaController = TextEditingController();
   final TextEditingController _alamatController = TextEditingController();
   final TextEditingController _panjangController = TextEditingController();
@@ -28,27 +25,29 @@ class _TambahState extends State<Tambah> {
   final TextEditingController _deskripsiController = TextEditingController();
   final TextEditingController _hargaController = TextEditingController();
 
-  Future<void> _pickImage() async {
-    final picker = ImagePicker();
-    final pickedFile = await picker.pickImage(source: ImageSource.gallery);
-    setState(() {
-      _image = pickedFile;
-    });
+  @override
+  void initState() {
+    super.initState();
+    
+    dropdownValue = widget.item.tipe ?? 'Rumah/ruko';
+    _namaController.text = widget.item.nama ?? '';
+    _alamatController.text = widget.item.alamat ?? '';
+    _panjangController.text = widget.item.panjang.toString();
+    _lebarController.text = widget.item.lebar.toString();
+    _deskripsiController.text = widget.item.deskripsi ?? '';
+    _hargaController.text = widget.item.harga.toString();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text(
-          'Tambah Properti Baru',
-          style: TextStyle(color: Colors.white),
-        ),
+        title: const Text('Edit Produk'),
         backgroundColor: const Color.fromARGB(255, 167, 86, 86),
       ),
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: SingleChildScrollView(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -62,34 +61,11 @@ class _TambahState extends State<Tambah> {
               ),
               const SizedBox(height: 8),
               TextField(
-                controller: _namaController, // Set controller
+                controller: _namaController,
                 decoration: const InputDecoration(
                   filled: true,
                   fillColor: Color.fromARGB(255, 233, 239, 214),
                   border: InputBorder.none,
-                ),
-              ),
-              const SizedBox(height: 16),
-              GestureDetector(
-                onTap: _pickImage,
-                child: Container(
-                  width: 500,
-                  height: 100,
-                  decoration: BoxDecoration(
-                    border: Border.all(color: Colors.grey),
-                    borderRadius: BorderRadius.circular(8),
-                    color: _image != null ? Colors.transparent : Colors.grey[200],
-                  ),
-                  child: _image != null
-                      ? SizedBox(
-                          width: 150,
-                          height: 150,
-                          child: Image.file(
-                            File(_image!.path),
-                            fit: BoxFit.cover,
-                          ),
-                        )
-                      : const Icon(Icons.add),
                 ),
               ),
               const SizedBox(height: 16),
@@ -131,7 +107,7 @@ class _TambahState extends State<Tambah> {
               ),
               const SizedBox(height: 8),
               TextField(
-                controller: _alamatController, // Set controller
+                controller: _alamatController,
                 decoration: const InputDecoration(
                   filled: true,
                   fillColor: Color.fromARGB(255, 233, 239, 214),
@@ -152,7 +128,7 @@ class _TambahState extends State<Tambah> {
                 children: [
                   Expanded(
                     child: TextField(
-                      controller: _panjangController, // Set controller
+                      controller: _panjangController,
                       decoration: const InputDecoration(
                         labelText: 'Panjang (meter)',
                         filled: true,
@@ -165,7 +141,7 @@ class _TambahState extends State<Tambah> {
                   const SizedBox(width: 16),
                   Expanded(
                     child: TextField(
-                      controller: _lebarController, // Set controller
+                      controller: _lebarController,
                       decoration: const InputDecoration(
                         labelText: 'Lebar (meter)',
                         filled: true,
@@ -188,13 +164,14 @@ class _TambahState extends State<Tambah> {
               ),
               const SizedBox(height: 8),
               TextField(
-                controller: _deskripsiController, // Set controller
+                controller: _deskripsiController,
                 decoration: const InputDecoration(
                   filled: true,
                   fillColor: Color.fromARGB(255, 233, 239, 214),
                   border: InputBorder.none,
                 ),
               ),
+              const SizedBox(height: 16),
               const Text(
                 'Harga',
                 style: TextStyle(
@@ -205,7 +182,7 @@ class _TambahState extends State<Tambah> {
               ),
               const SizedBox(height: 8),
               TextField(
-                controller: _hargaController, // Set controller
+                controller: _hargaController,
                 decoration: const InputDecoration(
                   prefixText: 'Rp ',
                   filled: true,
@@ -217,19 +194,22 @@ class _TambahState extends State<Tambah> {
               const SizedBox(height: 16),
               Center(
                 child: ElevatedButton(
-                  onPressed: () async{
-                    await dataHelper.insert(
+                  onPressed: () async {
+                    await dataHelper.update(
                       Prop(
-                      nama: _namaController.text,
-                      tipe: dropdownValue,
-                      alamat: _alamatController.text,
-                      panjang: int.parse(_panjangController.text),
-                      lebar: int.parse(_lebarController.text),
-                      deskripsi: _deskripsiController.text,
-                      harga: int.parse(_hargaController.text),
-                      gambar: Uint8List(0) //TODO : nanti ganti ke yang pas
-                      )
+                        id: widget.item.id, // Pastikan ID tetap
+                        nama: _namaController.text,
+                        alamat: _alamatController.text,
+                        panjang: int.parse(_panjangController.text),
+                        lebar: int.parse(_lebarController.text),
+                        deskripsi: _deskripsiController.text,
+                        harga: int.parse(_hargaController.text),
+                        gambar: Uint8List(0),
+                        tipe: dropdownValue,
+                      ),
+                      widget.item.id ?? 0, 
                     );
+
                     if (context.mounted) {
                       Navigator.pop(context);
                     }
@@ -239,7 +219,7 @@ class _TambahState extends State<Tambah> {
                     padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 12),
                   ),
                   child: const Text(
-                    'Submit',
+                    'Update',
                     style: TextStyle(
                       color: Colors.white,
                       fontSize: 16,

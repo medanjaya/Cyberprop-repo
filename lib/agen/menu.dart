@@ -1,15 +1,15 @@
-import 'package:cyberphobe_project/agen/login.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
+import 'package:firebase_auth/firebase_auth.dart';
+
 import '../datahelper.dart';
-import 'kontak.dart';
-import 'settings.dart';
+import 'login.dart';
 import 'tambah_produk.dart';
+import 'edit_produk.dart';
+import 'bottom_nav.dart';
 
 //TODO : rencananya, menu untuk klien sama agen di satu file; pakai isAdmin nanti buat pisahkan
 bool isAdmin = false;
-
 
 class Menu extends StatefulWidget {
   const Menu({super.key});
@@ -20,54 +20,16 @@ class Menu extends StatefulWidget {
 
 class _MenuState extends State<Menu> {
   DataHelper dataHelper = DataHelper();
-  List propItem =  [];
-
-  void _onItemTapped(int index) {
-    setState(() {
-      //selectedIndex = index;
-    });
-
-    switch (index) { //TODO : cek ini nanti
-      case 0:
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (context) => const Kontak()),
-        );
-        break;
-      case 1:
-        // No need to navigate to the same Menu page
-        break;
-      case 2:
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (context) => const Settings()),
-        );
-        break;
-    }
-  }
-
-  Future<void> _addItem() async {
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => const Tambah(),
-      ),
-    );
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    _loadItems();
-  }
+  List propItem = [];
 
   Future<void> _loadItems() async {
-  // Assuming `DataHelper` has a method to retrieve data
-  List items = await dataHelper.fetch();  // Replace with your actual method
-  setState(() {
-    propItem = items;
-  });
-}
+    List items = await dataHelper.fetch();
+    setState(
+      () {
+        propItem = items;
+      }
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -109,9 +71,12 @@ class _MenuState extends State<Menu> {
               }
             }
           ),
-          IconButton(onPressed: () async {
-            _loadItems();
-          }, icon: Icon(Icons.refresh))
+          IconButton(
+            onPressed: () async {
+              _loadItems();
+            },
+            icon: Icon(Icons.refresh),
+          ),
         ],
       ),
       body: Column(
@@ -177,7 +142,17 @@ class _MenuState extends State<Menu> {
                           color: Color.fromARGB(255, 167, 86, 86),
                         ),
                         onPressed: () {
-                          print('Edit Item ke-$index');
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => EditProduk(item: item),
+                            ),
+                          )
+                          .then(
+                            (_) {
+                              _loadItems();
+                            }
+                          );
                         },
                       ),
                     ],
@@ -189,28 +164,17 @@ class _MenuState extends State<Menu> {
         ],
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: _addItem,
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => const Tambah(),
+            ),
+          );
+        },
         child: const Icon(Icons.add),
       ),
-      bottomNavigationBar: BottomNavigationBar(
-        items: const <BottomNavigationBarItem>[
-          BottomNavigationBarItem(
-            icon: Icon(Icons.chat),
-            label: 'Kontak',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.business),
-            label: 'Properti',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.settings),
-            label: 'Pengaturan',
-          ),
-        ],
-        currentIndex: 1,
-        onTap: _onItemTapped,
-        backgroundColor: const Color.fromARGB(255, 255, 223, 183),
-      ),
+      bottomNavigationBar: CustomBottomNavigationBar(i: 1),
     );
   }
 }
