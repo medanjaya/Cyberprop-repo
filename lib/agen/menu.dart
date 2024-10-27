@@ -11,6 +11,28 @@ import 'bottom_nav.dart';
 //TODO : rencananya, menu untuk klien sama agen di satu file; pakai isAdmin nanti buat pisahkan
 bool isAdmin = false;
 
+void checkAuthState(context) {
+  FirebaseAuth.instance
+  .authStateChanges()
+  .listen(
+    (User? user) {
+      if (user == null) {
+        isAdmin = false;
+        Navigator.of(context)
+        .pushAndRemoveUntil(
+          MaterialPageRoute(
+            builder: (context) => const Login(),
+          ),
+          (Route route) => false
+        );
+      }
+      else {
+        //TODO : mau isi apa ya?
+      }
+    },
+  );
+}
+
 class Menu extends StatefulWidget {
   const Menu({super.key});
 
@@ -53,12 +75,13 @@ class _MenuState extends State<Menu> {
                       }
                     );
                   },
-                  icon: const Icon(Icons.login)
+                  icon: const Icon(Icons.logout)
                 );
               }
               else {
                 return IconButton(
-                  onPressed: () {
+                  onPressed: () async {
+                    await FirebaseAuth.instance.signOut();
                     Navigator.push(
                       context,
                       MaterialPageRoute(
@@ -66,7 +89,7 @@ class _MenuState extends State<Menu> {
                       ),
                     );
                   },
-                  icon: const Icon(Icons.logout)
+                  icon: const Icon(Icons.login)
                 );
               }
             }
@@ -174,7 +197,7 @@ class _MenuState extends State<Menu> {
         },
         child: const Icon(Icons.add),
       ),
-      bottomNavigationBar: CustomBottomNavigationBar(i: 1),
+      bottomNavigationBar: CustomBottomNavigationBar(index: 1),
     );
   }
 }

@@ -1,18 +1,18 @@
 import 'package:flutter/material.dart';
 
 import 'package:url_launcher/url_launcher.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart'; // Tambahkan ini
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
-import 'bottom_nav.dart';
+import 'package:cyberprop/agen/bottom_nav.dart';
 
-class Kontak extends StatelessWidget {
-  const Kontak({super.key});
+class Contact extends StatelessWidget {
+  const Contact({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Kontak'),
+        title: const Text('Kontak Agen'),
         backgroundColor: const Color.fromARGB(255, 167, 86, 86),
       ),
       body: Column(
@@ -21,73 +21,80 @@ class Kontak extends StatelessWidget {
             padding: EdgeInsets.all(16.0),
             child: Text(
               'Daftar Kontak',
-              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+              style: TextStyle(
+                fontSize: 24.0,
+                fontWeight: FontWeight.bold,
+              ),
             ),
           ),
           Expanded(
             child: ListView(
               children: [
                 _buildContactTile(
-                  context,
                   'WhatsApp',
                   FontAwesomeIcons.whatsapp,
-                  'https://wa.me/0123456789', // Ganti dengan nomor WhatsApp yang sesuai
+                  'https://wa.me/6289613713685?text=Test%20Message', //TODO : sebelum publish, ganti kontaknya yang bener
                 ),
                 _buildContactTile(
-                  context,
                   'Instagram',
                   FontAwesomeIcons.instagram,
-                  'https://www.instagram.com/username/', // Ganti dengan username Instagram yang sesuai
+                  'https://www.instagram.com/nicolasleeproperty?igsh=MWhheGhiaWJ4d2hwOQ==',
                 ),
                 _buildContactTile(
-                  context,
                   'Facebook',
                   FontAwesomeIcons.facebook,
-                  'https://www.facebook.com/username/', // Ganti dengan username Facebook yang sesuai
+                  'https://www.facebook.com/share/MNe7fKiLNFdLXWbQ/?mibextid=qi2Omg',
                 ),
                 _buildContactTile(
-                  context,
-                  'X',
-                  FontAwesomeIcons.x,
-                  'https://twitter.com/username/', // Ganti dengan username X yang sesuai
+                  'Tiktok',
+                  FontAwesomeIcons.tiktok,
+                  'https://vm.tiktok.com/ZMh9MSeVm/',
                 ),
               ],
             ),
           ),
         ],
       ),
-      bottomNavigationBar: CustomBottomNavigationBar(i: 0),
+      bottomNavigationBar: CustomBottomNavigationBar(index: 0),
     );
   }
 
-  Widget _buildContactTile(BuildContext context, String title, IconData icon, String url) {
+  Widget _buildContactTile(String title, IconData icon, String url) {
     return Container(
-      margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
-      padding: const EdgeInsets.all(16),
+      margin: const EdgeInsets.symmetric(
+        vertical: 8.0,
+        horizontal: 16.0,
+      ),
+      padding: const EdgeInsets.all(16.0),
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(8),
+        borderRadius: BorderRadius.circular(8.0),
         boxShadow: [
           BoxShadow(
             color: Colors.grey.withOpacity(0.2),
-            spreadRadius: 2,
-            blurRadius: 5,
+            spreadRadius: 2.0,
+            blurRadius: 5.0,
             offset: const Offset(0, 3),
           ),
         ],
       ),
       child: ListTile(
-        leading: FaIcon(icon, color: const Color.fromARGB(255, 167, 86, 86)), // Gunakan FaIcon untuk FontAwesome
+        leading: FaIcon(
+          icon,
+          size: 32.0,
+          color: const Color.fromARGB(255, 167, 86, 86),
+        ),
         title: Text(
           title,
-          style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+          style: const TextStyle(
+            fontSize: 18.0,
+            fontWeight: FontWeight.bold,
+          ),
         ),
         onTap: () async {
-          if (await canLaunch(url)) {
-            await launch(url);
-          } else {
-            throw 'Could not launch $url';
-          }
+          await launchUrl(
+            Uri.parse(url),
+          );
         },
       ),
     );

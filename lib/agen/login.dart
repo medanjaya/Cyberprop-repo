@@ -155,17 +155,8 @@ class _LoginState extends State<Login> {
                 child: const Text('Login'),
               ),
             ),
-
             const SizedBox(
               height: 8.0
-            ),
-
-            const Text(
-              'Belum memiliki akun?',
-              style: TextStyle(
-                color: Color.fromARGB(255, 171, 0, 0),
-                fontWeight: FontWeight.bold,
-              ),
             ),
           ],
         ),

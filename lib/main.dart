@@ -5,8 +5,8 @@ import 'package:provider/provider.dart';
 
 import 'firebase_options.dart';
 
-import 'agen/menu.dart';
-import 'provider/lightdark_provider.dart';
+import 'package:cyberprop/agen/menu.dart';
+import 'package:cyberprop/provider/lightdark_provider.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -16,7 +16,7 @@ void main() async {
 
   runApp(
     ChangeNotifierProvider(
-      create: (context) => LightdarkProvider(),
+      create: (context) => LightDarkProvider(),
       child: const MainApp(),
     ),
   );
@@ -27,21 +27,19 @@ class MainApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final provider = Provider.of<LightdarkProvider>(context);
+    final provider = Provider.of<LightDarkProvider>(context);
+    
     return MaterialApp(
       title: 'Cyberprop | Property Marketplace',
       debugShowCheckedModeBanner: false,
-      theme: provider.enableDarkMode 
-          ? ThemeData(
-            colorScheme: ColorScheme.dark(),
-            useMaterial3: false, //TODO : DRY; nanti kita keluarkan
-          ) 
-          : ThemeData(
-              colorScheme: ColorScheme.fromSeed(
-                seedColor: Colors.orange,
-              ),
-              useMaterial3: false,
+      theme: ThemeData( //TODO : bottomnav jadi putih waktu dark mode
+        colorScheme: provider.enableDarkMode 
+          ? ColorScheme.dark()
+          : ColorScheme.fromSeed(
+              seedColor: Colors.orange
             ),
+        useMaterial3: false,
+      ),  
       home: const Menu(),
     );
   }

@@ -1,4 +1,4 @@
-import 'dart:typed_data'; // Import this to use Uint8List
+import 'dart:typed_data';
 
 class Prop {
   int? id;
@@ -43,7 +43,7 @@ class Prop {
     return {
       'id': id,
       'nama': nama,
-      //'gambar': gambar,
+      'gambar': gambar,
       'tipe': tipe,
       'alamat': alamat,
       'panjang': panjang,

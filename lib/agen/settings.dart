@@ -14,7 +14,7 @@ class Settings extends StatefulWidget {
 class _SettingsState extends State<Settings> {
   @override
   Widget build(BuildContext context) {
-    final prov = Provider.of<LightdarkProvider>(context);
+    final provider = Provider.of<LightDarkProvider>(context);
     return Scaffold(
       appBar: AppBar(
         title: const Text('Pengaturan'),
@@ -36,11 +36,11 @@ class _SettingsState extends State<Settings> {
               children: [
                 const Text('Light / Dark Mode Theme'),
                 Switch(
-                  value: prov.enableDarkMode,
+                  value: provider.enableDarkMode,
                   activeColor: const Color.fromARGB(255, 99, 185, 255),
                   onChanged: (e) {
                     setState(() {
-                      prov.setBrightness = e;
+                      provider.setBrightness = e;
                     });
                   },
                 ),
@@ -50,7 +50,7 @@ class _SettingsState extends State<Settings> {
           ],
         ),
       ),
-      bottomNavigationBar: CustomBottomNavigationBar(i: 2),
+      bottomNavigationBar: CustomBottomNavigationBar(index: 2),
     );
   }
 }

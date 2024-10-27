@@ -5,8 +5,9 @@ import 'kontak.dart';
 import 'settings.dart';
 
 class CustomBottomNavigationBar extends StatelessWidget {
-  const CustomBottomNavigationBar({super.key, required this.i});
-  final int i;
+  const CustomBottomNavigationBar({super.key, required this.index});
+  
+  final int index;
 
   @override
   Widget build(BuildContext context) {
@@ -14,7 +15,7 @@ class CustomBottomNavigationBar extends StatelessWidget {
       items: const <BottomNavigationBarItem>[
         BottomNavigationBarItem(
           icon: Icon(Icons.chat),
-          label: 'Kontak',
+          label: 'Contact',
         ),
         BottomNavigationBarItem(
           icon: Icon(Icons.business),
@@ -25,14 +26,14 @@ class CustomBottomNavigationBar extends StatelessWidget {
           label: 'Pengaturan',
         ),
       ],
-      currentIndex: i,
+      currentIndex: index,
       onTap: (value) {
         Navigator.of(context)
         .pushAndRemoveUntil(
           MaterialPageRoute(
             builder: (context) {
               if (value == 0) {
-                return const Kontak();
+                return const Contact();
               }
               else if (value == 1) {
                 return const Menu();
@@ -50,48 +51,3 @@ class CustomBottomNavigationBar extends StatelessWidget {
     );
   }
 }
-
-/*void _onItemTapped(int index) {
-  setState(() {
-    //selectedIndex = index;
-  });
-
-  switch (index) { //TODO : cek ini nanti
-    case 0:
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (context) => const Kontak()),
-      );
-      break;
-    case 1:
-      // No need to navigate to the same Menu page
-      break;
-    case 2:
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (context) => const Settings()),
-      );
-      break;
-  }
-}
-
-onTap: (index) {
-          switch (index) {
-            case 0: // Kontak
-              // Already on Kontak screen
-              break;
-            case 1: // Navigate to Menu
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => const Menu()),
-              );
-              break;
-            case 2: // Navigate to Settings or another screen
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => const Settings()),
-              );
-              break;
-          }
-        },
-*/

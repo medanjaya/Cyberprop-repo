@@ -1,32 +1,33 @@
-import 'package:cyberphobe_project/model/model.dart';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 
+import 'model/model.dart';
+
 class DataHelper {
-  Database? database;
-  String databaseName = 'PROPERTY_DB'; // Renamed to fit your model context
-  int databaseVersion = 1;
+  Database? db;
+  String dbName = 'PROPERTY_DB';
+  int dbVersion = 1;
 
   DataHelper() {
     checkDatabase();
   }
 
   Future<Database> checkDatabase() async {
-    database ??= await initDatabase();
-    return database!;
+    db ??= await initDatabase();
+    return db!;
   }
 
   Future<Database> initDatabase() async {
     String path = await getDatabasesPath();
     return openDatabase(
-      join(path, databaseName),
-      version: databaseVersion,
+      join(path, dbName),
+      version: dbVersion,
       onCreate: createDatabase,
     );
   }
 
-  Future<void> createDatabase(Database database, int version) async {
-    await database.execute(
+  Future<void> createDatabase(Database db, int version) async {
+    await db.execute(
       '''CREATE TABLE Property (
           id INTEGER PRIMARY KEY AUTOINCREMENT,
           nama TEXT,
@@ -39,11 +40,11 @@ class DataHelper {
           harga INTEGER
         )
       '''
-    ); // Adjusted to match the `prop` class
+    );
   }
 
   Future<List<Prop>> fetch() async {
-    List data = await database!.query('Property');
+    List data = await db!.query('Property');
     List<Prop> proper = data.map(
       (e) => Prop(
         id: e['id'],
@@ -62,7 +63,7 @@ class DataHelper {
   }
 
   Future<int> insert(Prop prop) async {
-    int idproperti = await database!.insert('Property', {
+    int idproperti = await db!.insert('Property', {
       'id': prop.id,
       'nama': prop.nama,
       'gambar': prop.gambar,
@@ -77,7 +78,7 @@ class DataHelper {
   }
 
   Future<int> update(Prop prop, int id) async {
-    int rowsAffected = await database!.update(
+    int rowsAffected = await db!.update(
       'Property',
       prop.toMap(),
       where: 'id = ?',
@@ -87,7 +88,7 @@ class DataHelper {
   }
 
   Future<int> delete(int id) async {
-    int rowsAffected = await database!.delete(
+    int rowsAffected = await db!.delete(
       'Property',
       where: 'id = ?',
       whereArgs: [id],

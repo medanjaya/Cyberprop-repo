@@ -6,10 +6,10 @@ import '../datahelper.dart';
 import '../model/model.dart';
 
 class EditProduk extends StatefulWidget {
-  final Prop item; // Menerima item yang akan diedit
-
   const EditProduk({super.key, required this.item});
 
+  final Prop item; // Menerima item yang akan diedit
+  
   @override
   State<EditProduk> createState() => _EditProdukState();
 }
