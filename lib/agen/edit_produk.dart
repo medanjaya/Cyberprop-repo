@@ -9,14 +9,14 @@ class EditProduk extends StatefulWidget {
   const EditProduk({super.key, required this.item});
 
   final Prop item; // Menerima item yang akan diedit
-  
+
   @override
   State<EditProduk> createState() => _EditProdukState();
 }
 
 class _EditProdukState extends State<EditProduk> {
   final DataHelper dataHelper = DataHelper();
-  
+
   String dropdownValue = '';
   final TextEditingController _namaController = TextEditingController();
   final TextEditingController _alamatController = TextEditingController();
@@ -28,13 +28,13 @@ class _EditProdukState extends State<EditProduk> {
   @override
   void initState() {
     super.initState();
-    
-    dropdownValue = widget.item.tipe ?? 'Rumah/ruko';
-    _namaController.text = widget.item.nama ?? '';
-    _alamatController.text = widget.item.alamat ?? '';
+
+    dropdownValue = widget.item.tipe ;
+    _namaController.text = widget.item.nama;
+    _alamatController.text = widget.item.alamat;
     _panjangController.text = widget.item.panjang.toString();
     _lebarController.text = widget.item.lebar.toString();
-    _deskripsiController.text = widget.item.deskripsi ?? '';
+    _deskripsiController.text = widget.item.deskripsi;
     _hargaController.text = widget.item.harga.toString();
   }
 
