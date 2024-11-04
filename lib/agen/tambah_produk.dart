@@ -1,12 +1,12 @@
 import 'dart:io';
 import 'dart:typed_data';
+
 import 'package:flutter/material.dart';
 
 import 'package:image_picker/image_picker.dart';
 
 import '../datahelper.dart';
 import '../model/model.dart';
-
 
 class Tambah extends StatefulWidget {
   const Tambah({super.key});
@@ -17,24 +17,18 @@ class Tambah extends StatefulWidget {
 
 class _TambahState extends State<Tambah> {
   DataHelper dataHelper = DataHelper();
-
-  String dropdownValue = 'Rumah/ruko';
-  XFile? _image;
   
-  final TextEditingController _namaController = TextEditingController();
-  final TextEditingController _alamatController = TextEditingController();
-  final TextEditingController _panjangController = TextEditingController();
-  final TextEditingController _lebarController = TextEditingController();
-  final TextEditingController _deskripsiController = TextEditingController();
-  final TextEditingController _hargaController = TextEditingController();
-
-  Future<void> _pickImage() async {
-    final picker = ImagePicker();
-    final pickedFile = await picker.pickImage(source: ImageSource.gallery);
-    setState(() {
-      _image = pickedFile;
-    });
-  }
+  String dropValue = 'Rumah/ruko';
+  XFile? pickedImage;
+  Uint8List? convertedImage;
+  
+  TextEditingController
+  namaController = TextEditingController(),
+  alamatController = TextEditingController(),
+  panjangController = TextEditingController(),
+  lebarController = TextEditingController(),
+  deskripsiController = TextEditingController(),
+  hargaController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -57,81 +51,101 @@ class _TambahState extends State<Tambah> {
                 style: TextStyle(
                   color: Color.fromARGB(255, 167, 86, 86),
                   fontWeight: FontWeight.bold,
-                  fontSize: 16,
+                  fontSize: 16.0,
                 ),
               ),
               const SizedBox(height: 8),
               TextField(
-                controller: _namaController, // Set controller
+                controller: namaController,
                 decoration: const InputDecoration(
                   filled: true,
                   fillColor: Color.fromARGB(255, 233, 239, 214),
                   border: InputBorder.none,
                 ),
               ),
-              const SizedBox(height: 16),
+              const SizedBox(height: 16.0),
               GestureDetector(
-                onTap: _pickImage,
+                onTap: () async {
+                  final pickedFile = await ImagePicker().pickImage(
+                    source: ImageSource.gallery,
+                    imageQuality: 80,
+                  );
+                  pickedImage = pickedFile;
+                  
+                  File imageFile = File(pickedImage!.path);
+                  convertedImage = await imageFile.readAsBytes();
+
+                  setState(() {});
+                },
                 child: Container(
                   width: 500,
                   height: 100,
                   decoration: BoxDecoration(
                     border: Border.all(color: Colors.grey),
-                    borderRadius: BorderRadius.circular(8),
-                    color: _image != null ? Colors.transparent : Colors.grey[200],
+                    borderRadius: BorderRadius.circular(8.0),
+                    color: pickedImage != null
+                    ? Colors.transparent
+                    : Colors.grey[200],
                   ),
-                  child: _image != null
-                      ? SizedBox(
-                          width: 150,
-                          height: 150,
-                          child: Image.file(
-                            File(_image!.path),
-                            fit: BoxFit.cover,
-                          ),
-                        )
-                      : const Icon(Icons.add),
+                  child: pickedImage != null
+                  ? SizedBox(
+                      width: 150,
+                      height: 150,
+                      child: Image.file(
+                        File(pickedImage!.path),
+                        fit: BoxFit.cover,
+                      ),
+                    )
+                  : const Icon(Icons.add),
                 ),
               ),
-              const SizedBox(height: 16),
+              const SizedBox(height: 16.0),
               DropdownButton<String>(
-                value: dropdownValue,
+                value: dropValue,
                 icon: const Icon(Icons.arrow_drop_down),
                 elevation: 16,
-                style: const TextStyle(color: Color.fromARGB(255, 167, 86, 86)),
+                style: const TextStyle(
+                  color: Color.fromARGB(255, 167, 86, 86),
+                ),
                 underline: Container(
                   height: 2,
                   color: const Color.fromARGB(255, 167, 86, 86),
                 ),
                 onChanged: (String? newValue) {
-                  setState(() {
-                    dropdownValue = newValue!;
-                  });
+                  setState(
+                    () {
+                      dropValue = newValue!;
+                    }
+                  );
                 },
                 items: <String>[
                   'Rumah/ruko',
                   'Apartemen/kondominium',
                   'Villa',
                   'Kantor',
-                  'Tanah'
-                ].map<DropdownMenuItem<String>>((String value) {
-                  return DropdownMenuItem<String>(
-                    value: value,
-                    child: Text(value),
-                  );
-                }).toList(),
+                  'Tanah',
+                ]
+                .map<DropdownMenuItem<String>>(
+                  (String value) {
+                    return DropdownMenuItem<String>(
+                      value: value,
+                      child: Text(value),
+                    );
+                  }
+                ).toList(),
               ),
-              const SizedBox(height: 16),
+              const SizedBox(height: 16.0),
               const Text(
                 'Alamat',
                 style: TextStyle(
                   color: Color.fromARGB(255, 167, 86, 86),
                   fontWeight: FontWeight.bold,
-                  fontSize: 16,
+                  fontSize: 16.0,
                 ),
               ),
-              const SizedBox(height: 8),
+              const SizedBox(height: 8.0),
               TextField(
-                controller: _alamatController, // Set controller
+                controller: alamatController,
                 decoration: const InputDecoration(
                   filled: true,
                   fillColor: Color.fromARGB(255, 233, 239, 214),
@@ -144,7 +158,7 @@ class _TambahState extends State<Tambah> {
                 style: TextStyle(
                   color: Color.fromARGB(255, 167, 86, 86),
                   fontWeight: FontWeight.bold,
-                  fontSize: 16,
+                  fontSize: 16.0,
                 ),
               ),
               const SizedBox(height: 8),
@@ -152,7 +166,7 @@ class _TambahState extends State<Tambah> {
                 children: [
                   Expanded(
                     child: TextField(
-                      controller: _panjangController, // Set controller
+                      controller: panjangController,
                       decoration: const InputDecoration(
                         labelText: 'Panjang (meter)',
                         filled: true,
@@ -165,7 +179,7 @@ class _TambahState extends State<Tambah> {
                   const SizedBox(width: 16),
                   Expanded(
                     child: TextField(
-                      controller: _lebarController, // Set controller
+                      controller: lebarController,
                       decoration: const InputDecoration(
                         labelText: 'Lebar (meter)',
                         filled: true,
@@ -183,12 +197,12 @@ class _TambahState extends State<Tambah> {
                 style: TextStyle(
                   color: Color.fromARGB(255, 167, 86, 86),
                   fontWeight: FontWeight.bold,
-                  fontSize: 16,
+                  fontSize: 16.0,
                 ),
               ),
-              const SizedBox(height: 8),
+              const SizedBox(height: 8.0),
               TextField(
-                controller: _deskripsiController, // Set controller
+                controller: deskripsiController,
                 decoration: const InputDecoration(
                   filled: true,
                   fillColor: Color.fromARGB(255, 233, 239, 214),
@@ -200,12 +214,12 @@ class _TambahState extends State<Tambah> {
                 style: TextStyle(
                   color: Color.fromARGB(255, 167, 86, 86),
                   fontWeight: FontWeight.bold,
-                  fontSize: 16,
+                  fontSize: 16.0,
                 ),
               ),
-              const SizedBox(height: 8),
+              const SizedBox(height: 8.0),
               TextField(
-                controller: _hargaController, // Set controller
+                controller: hargaController,
                 decoration: const InputDecoration(
                   prefixText: 'Rp ',
                   filled: true,
@@ -214,35 +228,48 @@ class _TambahState extends State<Tambah> {
                 ),
                 keyboardType: TextInputType.number,
               ),
-              const SizedBox(height: 16),
+              const SizedBox(height: 16.0),
               Center(
                 child: ElevatedButton(
-                  onPressed: () async{
+                  onPressed: () async {
                     await dataHelper.insert(
                       Prop(
-                      nama: _namaController.text,
-                      tipe: dropdownValue,
-                      alamat: _alamatController.text,
-                      panjang: int.parse(_panjangController.text),
-                      lebar: int.parse(_lebarController.text),
-                      deskripsi: _deskripsiController.text,
-                      harga: int.parse(_hargaController.text),
-                      gambar: Uint8List(0) //TODO : nanti ganti ke yang pas
+                        nama: namaController.text,
+                        gambar: convertedImage!,
+                        tipe: dropValue,
+                        alamat: alamatController.text,
+                        panjang: int.parse(panjangController.text),
+                        lebar: int.parse(lebarController.text),
+                        deskripsi: deskripsiController.text,
+                        harga: int.parse(hargaController.text),
                       )
                     );
                     if (context.mounted) {
-                      Navigator.pop(context);
+                      Navigator.pop(
+                        context,
+                        ScaffoldMessenger.of(context)
+                        .showSnackBar(
+                          SnackBar(
+                            content: Text(
+                              'Data updated.'
+                            ),
+                          ),
+                        ),
+                      );
                     }
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: const Color.fromARGB(255, 167, 86, 86),
-                    padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 12),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 32.0,
+                      vertical: 12.0
+                    ),
                   ),
                   child: const Text(
                     'Submit',
                     style: TextStyle(
                       color: Colors.white,
-                      fontSize: 16,
+                      fontSize: 16.0,
                     ),
                   ),
                 ),

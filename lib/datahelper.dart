@@ -45,7 +45,7 @@ class DataHelper {
 
   Future<List<Prop>> fetch() async {
     List data = await db!.query('Property');
-    List<Prop> proper = data.map(
+    return data.map(
       (e) => Prop(
         id: e['id'],
         nama: e['nama'],
@@ -58,41 +58,41 @@ class DataHelper {
         harga: e['harga']
       ),
     ).toList();
-    
-    return proper;
   }
 
-  Future<int> insert(Prop prop) async {
-    int idproperti = await db!.insert('Property', {
-      'id': prop.id,
-      'nama': prop.nama,
-      'gambar': prop.gambar,
-      'tipe': prop.tipe,
-      'alamat': prop.alamat,
-      'panjang': prop.panjang,
-      'lebar': prop.lebar,
-      'deskripsi': prop.deskripsi,
-      'harga': prop.harga
-    });
-    return idproperti;
+  Future<int> insert(Prop data) async {
+    int i = await db!.insert(
+      'Property', {
+        'id': data.id,
+        'nama': data.nama,
+        'gambar': data.gambar,
+        'tipe': data.tipe,
+        'alamat': data.alamat,
+        'panjang': data.panjang,
+        'lebar': data.lebar,
+        'deskripsi': data.deskripsi,
+        'harga': data.harga
+      }
+    );
+    return i;
   }
 
-  Future<int> update(Prop prop, int id) async {
-    int rowsAffected = await db!.update(
+  Future<int> update(Prop data, int id) async {
+    int i = await db!.update(
       'Property',
-      prop.toMap(),
+      data.toMap(),
       where: 'id = ?',
       whereArgs: [id],
     );
-    return rowsAffected;
+    return i;
   }
 
   Future<int> delete(int id) async {
-    int rowsAffected = await db!.delete(
+    int i = await db!.delete(
       'Property',
       where: 'id = ?',
       whereArgs: [id],
     );
-    return rowsAffected;
+    return i;
   }
 }

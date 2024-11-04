@@ -25,7 +25,7 @@ void checkAuthState(context) {
 
 class Menu extends StatefulWidget {
   const Menu({super.key});
-
+  
   @override
   State<Menu> createState() => _MenuState();
 }
@@ -34,7 +34,7 @@ class _MenuState extends State<Menu> {
   DataHelper dataHelper = DataHelper();
   List propItem = [];
 
-  Future<void> _loadItems() async {
+  Future<void> _loadItems() async { //TODO : jangan pakai ini, pakai StreamBuilder nanti
     List items = await dataHelper.fetch();
     setState(
       () {
@@ -43,6 +43,12 @@ class _MenuState extends State<Menu> {
     );
   }
 
+  @override
+  void initState() {
+    checkAuthState(context);
+    super.initState();
+  }
+  
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -59,11 +65,7 @@ class _MenuState extends State<Menu> {
                     if (context.mounted) {
                       checkAuthState(context);
                     }
-                    setState(
-                      () {
-                        //TODO : hapus nanti
-                      }
-                    );
+                    setState(() {});
                   },
                   icon: const Icon(Icons.logout)
                 );
@@ -83,6 +85,7 @@ class _MenuState extends State<Menu> {
               }
             }
           ),
+          SizedBox(width: 8.0),
           IconButton(
             onPressed: () async {
               _loadItems();
@@ -97,14 +100,18 @@ class _MenuState extends State<Menu> {
             padding: EdgeInsets.all(16.0),
             child: Text(
               'Daftar Item',
-              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+              style: TextStyle(
+                fontSize: 24,
+                fontWeight: FontWeight.bold,
+              ),
             ),
           ),
           Expanded(
             child: ListView.builder(
               itemCount: propItem.length,
-              itemBuilder: (context, index) {
-                var item = propItem[index];
+              itemBuilder: (context, i) {
+                final item = propItem[i];
+                
                 return Container(
                   margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
                   padding: const EdgeInsets.all(16),
@@ -122,16 +129,16 @@ class _MenuState extends State<Menu> {
                   ),
                   child: Row(
                     children: [
-                      // if (item['imagePath'] != null)
-                      //   Padding(
-                      //     padding: const EdgeInsets.only(right: 16.0),
-                      //     child: Image.file(
-                      //       File(item['imagePath']),
-                      //       width: 100,
-                      //       height: 100,
-                      //       fit: BoxFit.cover,
-                      //     ),
-                      //   ),
+                      if (item.gambar != null)
+                        Padding(
+                          padding: const EdgeInsets.only(right: 16.0),
+                          child: Image.memory(
+                            item.gambar,
+                            width: 100,
+                            height: 100,
+                            fit: BoxFit.cover,
+                          ),
+                        ),
                       Expanded(
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,

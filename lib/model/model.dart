@@ -1,4 +1,4 @@
-import 'dart:typed_data';
+import 'dart:typed_data'; //TODO : pindahkan ke datahelper
 
 class Prop {
   int? id;
@@ -23,12 +23,11 @@ class Prop {
     required this.harga,
   });
 
-  //TODO : Convert from Map to Property object
   factory Prop.fromMap(Map<String, dynamic> map) {
     return Prop(
       id: map['id'],
       nama: map['nama'],
-      gambar: map['gambar'], //TODO : Assuming it's stored as Uint8List (BLOB)
+      gambar: map['gambar'],
       tipe: map['tipe'],
       alamat: map['alamat'],
       panjang: map['panjang'],
@@ -38,7 +37,6 @@ class Prop {
     );
   }
 
-  //TODO : Convert Property object to Map
   Map<String, dynamic> toMap() {
     return {
       'id': id,

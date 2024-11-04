@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 
-import 'package:firebase_core/firebase_core.dart';
 import 'package:provider/provider.dart';
 
+import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
 
-import 'package:cyberprop/agen/menu.dart';
-import 'package:cyberprop/provider/lightdark_provider.dart';
+import 'agen/menu.dart';
+import 'provider/lightdark_provider.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -34,10 +34,10 @@ class MainApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       theme: ThemeData( //TODO : bottomnav jadi putih waktu dark mode
         colorScheme: provider.enableDarkMode 
-          ? ColorScheme.dark()
-          : ColorScheme.fromSeed(
-              seedColor: Colors.orange
-            ),
+        ? ColorScheme.dark()
+        : ColorScheme.fromSeed(
+            seedColor: Colors.orange
+          ),
         useMaterial3: false,
       ),  
       home: const Menu(),
