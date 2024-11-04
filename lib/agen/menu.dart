@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 
 import 'package:firebase_auth/firebase_auth.dart';
 
-import '../datahelper.dart';
-import 'login.dart';
-import 'tambah_produk.dart';
-import 'edit_produk.dart';
-import 'bottom_nav.dart';
+import 'package:cyberprop/datahelper.dart';
+import 'package:cyberprop/agen/login.dart';
+import 'package:cyberprop/agen/tambah_produk.dart';
+import 'package:cyberprop/agen/edit_produk.dart';
+import 'package:cyberprop/agen/bottom_nav.dart';
 
 //TODO : rencananya, menu untuk klien sama agen di satu file; pakai isAdmin nanti buat pisahkan
 bool isAdmin = false;
@@ -16,19 +16,9 @@ void checkAuthState(context) {
   .authStateChanges()
   .listen(
     (User? user) {
-      if (user == null) {
-        isAdmin = false;
-        Navigator.of(context)
-        .pushAndRemoveUntil(
-          MaterialPageRoute(
-            builder: (context) => const Login(),
-          ),
-          (Route route) => false
-        );
-      }
-      else {
-        //TODO : mau isi apa ya?
-      }
+      user == null
+      ? isAdmin = false //TODO : DRY, nanti kita ubah
+      : isAdmin = true;
     },
   );
 }
@@ -81,7 +71,6 @@ class _MenuState extends State<Menu> {
               else {
                 return IconButton(
                   onPressed: () async {
-                    await FirebaseAuth.instance.signOut();
                     Navigator.push(
                       context,
                       MaterialPageRoute(

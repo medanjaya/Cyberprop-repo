@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
-import 'menu.dart';
+import 'package:cyberprop/agen/menu.dart';
 
 void checkAuthState(context) {
   FirebaseAuth.instance
@@ -29,8 +29,9 @@ class Login extends StatefulWidget {
 }
 
 class _LoginState extends State<Login> {
-  final user = TextEditingController();
-  final pass = TextEditingController();
+  TextEditingController
+  user = TextEditingController(),
+  pass = TextEditingController();
   
   @override
   void initState() {
@@ -38,10 +39,13 @@ class _LoginState extends State<Login> {
     super.initState();
   }
 
-  @override //TODO : scaling pakai expanded
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color.fromARGB(99, 226, 139, 33), // TODO : ini perlu kah? nb warna transparan
+      appBar: AppBar(
+        forceMaterialTransparency: true,
+      ),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -52,14 +56,12 @@ class _LoginState extends State<Login> {
             const Text(
               'Cyberprop (v0.pa) (UKS)',
               style: TextStyle(
-                color: Color.fromARGB(255, 167, 86, 86), // TODO : Color.fromARGB(255, 233, 239, 214)
+                color: Color.fromARGB(255, 167, 86, 86),
                 fontWeight: FontWeight.bold,
-                fontSize: 16.0, // TODO : 8.0
+                fontSize: 16.0,
               ),
             ),
-            const SizedBox(
-              height: 16.0
-            ),
+            const SizedBox(height: 16.0),
             SizedBox(
               width: MediaQuery.of(context).size.width / 2,
               child: Column(
@@ -116,9 +118,7 @@ class _LoginState extends State<Login> {
                 ],
               ),
             ),
-            const SizedBox(
-              height: 16.0
-            ),
+            const SizedBox(height: 32.0),
             SizedBox(
               width: MediaQuery.of(context).size.width / 2,
               child: ElevatedButton(
@@ -149,14 +149,16 @@ class _LoginState extends State<Login> {
                   foregroundColor: Color.fromARGB(255, 233, 239, 214),
                   backgroundColor: const Color.fromARGB(255, 167, 86, 86),
                   shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(0),
+                    borderRadius: BorderRadius.zero,
                   ),
                 ),
-                child: const Text('Login'),
+                child: const Text(
+                  'Login',
+                  style: TextStyle(
+                    fontSize: 16.0,
+                  ),
+                ),
               ),
-            ),
-            const SizedBox(
-              height: 8.0
             ),
           ],
         ),
