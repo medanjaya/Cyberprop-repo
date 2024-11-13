@@ -1,15 +1,19 @@
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
-
 import 'model/model.dart';
+
+import 'dart:async';
 
 class DataHelper {
   Database? db;
   String dbName = 'PROPERTY_DB';
   int dbVersion = 1;
 
+  final StreamController<List<Prop>> _propStreamController = StreamController<List<Prop>>.broadcast();
+
   DataHelper() {
     checkDatabase();
+    _loadInitialData();
   }
 
   Future<Database> checkDatabase() async {
@@ -43,6 +47,16 @@ class DataHelper {
     );
   }
 
+  Future<void> _loadInitialData() async {
+    await checkDatabase();
+    final data = await fetch();
+    _propStreamController.add(data);
+  }
+
+  Stream<List<Prop>> fetchAsStream() {
+    return _propStreamController.stream;
+  }
+
   Future<List<Prop>> fetch() async {
     List data = await db!.query('Property');
     return data.map(
@@ -60,6 +74,8 @@ class DataHelper {
     ).toList();
   }
 
+
+
   Future<int> insert(Prop data) async {
     int i = await db!.insert(
       'Property', {
@@ -74,6 +90,7 @@ class DataHelper {
         'harga': data.harga
       }
     );
+    _loadInitialData(); // Reload data after insertion
     return i;
   }
 
@@ -84,6 +101,7 @@ class DataHelper {
       where: 'id = ?',
       whereArgs: [id],
     );
+    _loadInitialData(); // Reload data after update
     return i;
   }
 
@@ -93,6 +111,7 @@ class DataHelper {
       where: 'id = ?',
       whereArgs: [id],
     );
+    _loadInitialData(); // Reload data after deletion
     return i;
   }
 }

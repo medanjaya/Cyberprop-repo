@@ -1,9 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-
 import 'package:firebase_auth/firebase_auth.dart';
-
 import 'package:cyberprop/datahelper.dart';
 import 'package:cyberprop/agen/login.dart';
 import 'package:cyberprop/agen/tambah_produk.dart';
@@ -20,17 +18,17 @@ class Menu extends StatefulWidget {
 }
 
 class _MenuState extends State<Menu> {
-  DataHelper dataHelper = DataHelper();
-  List propItem = [];
+  final DataHelper dataHelper = DataHelper();
+  // List propItem = [];
 
-  Future<void> _loadItems() async { //TODO : jangan pakai ini, pakai StreamBuilder nanti
-    List items = await dataHelper.fetch();
-    setState(
-      () {
-        propItem = items;
-      }
-    );
-  }
+  // Future<void> _loadItems() async { //TODO : jangan pakai ini, pakai StreamBuilder nanti
+  //   List items = await dataHelper.fetch();
+  //   setState(
+  //     () {
+  //       propItem = items;
+  //     }
+  //   );
+  // }
 
   @override
   void initState() {
@@ -44,7 +42,6 @@ class _MenuState extends State<Menu> {
     }
     super.initState();
   }
-  
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -52,9 +49,10 @@ class _MenuState extends State<Menu> {
         title: const Text('Menu'),
         backgroundColor: const Color.fromARGB(255, 167, 86, 86),
         actions: [
-          Builder(
-            builder: (context) {
-              if (user != null) {
+          StreamBuilder<User?>(
+            stream: FirebaseAuth.instance.authStateChanges(),
+            builder: (context, snapshot) {
+              if (isAdmin) {
                 return IconButton(
                   onPressed: () async {
                     await FirebaseAuth.instance.signOut();
@@ -79,12 +77,12 @@ class _MenuState extends State<Menu> {
             },
           ),
           SizedBox(width: 8.0),
-          IconButton(
-            onPressed: () async {
-              _loadItems();
-            },
-            icon: Icon(Icons.refresh),
-          ),
+          // IconButton(
+          //   onPressed: () async {
+          //     _loadItems();
+          //   },
+          //   icon: Icon(Icons.refresh),
+          // ),
         ],
       ),
       body: Column(
@@ -100,76 +98,81 @@ class _MenuState extends State<Menu> {
             ),
           ),
           Expanded(
-            child: ListView.builder(
-              itemCount: propItem.length,
-              itemBuilder: (context, i) {
-                final item = propItem[i];
+            child: StreamBuilder<List>(
+              stream: dataHelper.fetchAsStream(), // Replace with the actual stream method
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return const Center(child: CircularProgressIndicator());
+                } else if (snapshot.hasError) {
+                  return Center(child: Text('Error: ${snapshot.error}'));
+                } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                  return const Center(child: Text('No items available'));
+                }
 
-                return Container(
-                  margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
-                  padding: const EdgeInsets.all(16),
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(8),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.grey.withOpacity(0.2),
-                        spreadRadius: 2,
-                        blurRadius: 5,
-                        offset: const Offset(0, 3),
-                      ),
-                    ],
-                  ),
-                  child: Row(
-                    children: [
-                      if (item.gambar != null)
-                        Padding(
-                          padding: const EdgeInsets.only(right: 16.0),
-                          child: Image.memory(
-                            item.gambar,
-                            width: 100,
-                            height: 100,
-                            fit: BoxFit.cover,
+                final propItem = snapshot.data!;
+
+                return ListView.builder(
+                  itemCount: propItem.length,
+                  itemBuilder: (context, i) {
+                    final item = propItem[i];
+                    return Container(
+                      margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+                      padding: const EdgeInsets.all(16),
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(8),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.grey.withOpacity(0.2),
+                            spreadRadius: 2,
+                            blurRadius: 5,
+                            offset: const Offset(0, 3),
                           ),
-                        ),
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              item.nama ?? 'Unknown',
-                              style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                            ),
-                            Text(item.tipe ?? ''),
-                            Text(item.alamat ?? ''),
-                            Text(item.panjang.toString()),
-                            Text(item.lebar.toString()),
-                            Text(item.harga.toString()),
-                          ],
-                        ),
+                        ],
                       ),
-                      if (user != null)
-                        IconButton(
-                          icon: const Icon(
-                            Icons.edit,
-                            color: Color.fromARGB(255, 167, 86, 86),
-                          ),
-                          onPressed: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => EditProduk(item: item),
+                      child: Row(
+                        children: [
+                          if (item.gambar != null)
+                            Padding(
+                              padding: const EdgeInsets.only(right: 16.0),
+                              child: Image.memory(
+                                item.gambar,
+                                width: 100,
+                                height: 100,
+                                fit: BoxFit.cover,
                               ),
-                            )
-                            .then(
-                              (_) {
-                                _loadItems();
-                              }
-                            );
-                          },
-                        ),
-                    ],
-                  ),
+                            ),
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  item.nama ?? 'Unknown',
+                                  style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                                ),
+                                Text(item.tipe ?? ''),
+                                Text(item.alamat ?? ''),
+                                Text(item.panjang?.toString() ?? ''),
+                                Text(item.lebar?.toString() ?? ''),
+                                Text(item.harga?.toString() ?? ''),
+                              ],
+                            ),
+                          ),
+                          IconButton(
+                            icon: const Icon(Icons.edit, color: Color.fromARGB(255, 167, 86, 86)),
+                            onPressed: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => EditProduk(item: item),
+                                ),
+                              );
+                            },
+                          ),
+                        ],
+                      ),
+                    );
+                  },
                 );
               },
             ),
