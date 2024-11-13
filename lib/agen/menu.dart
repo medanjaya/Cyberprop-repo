@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 
 import 'package:firebase_auth/firebase_auth.dart';
@@ -8,20 +10,7 @@ import 'package:cyberprop/agen/tambah_produk.dart';
 import 'package:cyberprop/agen/edit_produk.dart';
 import 'package:cyberprop/agen/bottom_nav.dart';
 
-//TODO : rencananya, menu untuk klien sama agen di satu file; pakai isAdmin nanti buat pisahkan
-bool isAdmin = false;
-
-void checkAuthState(context) {
-  FirebaseAuth.instance
-  .authStateChanges()
-  .listen(
-    (User? user) {
-      user == null
-      ? isAdmin = false //TODO : DRY, nanti kita ubah
-      : isAdmin = true;
-    },
-  );
-}
+final user = FirebaseAuth.instance.currentUser;
 
 class Menu extends StatefulWidget {
   const Menu({super.key});
@@ -45,7 +34,14 @@ class _MenuState extends State<Menu> {
 
   @override
   void initState() {
-    checkAuthState(context);
+    if (user != null) {
+      ScaffoldMessenger.of(context)
+      .showSnackBar(
+        SnackBar(
+          content: Text('Logged as admin.')
+        ),
+      );
+    }
     super.initState();
   }
   
@@ -58,13 +54,10 @@ class _MenuState extends State<Menu> {
         actions: [
           Builder(
             builder: (context) {
-              if (isAdmin) {
+              if (user != null) {
                 return IconButton(
                   onPressed: () async {
                     await FirebaseAuth.instance.signOut();
-                    if (context.mounted) {
-                      checkAuthState(context);
-                    }
                     setState(() {});
                   },
                   icon: const Icon(Icons.logout)
@@ -83,7 +76,7 @@ class _MenuState extends State<Menu> {
                   icon: const Icon(Icons.login)
                 );
               }
-            }
+            },
           ),
           SizedBox(width: 8.0),
           IconButton(
@@ -111,7 +104,7 @@ class _MenuState extends State<Menu> {
               itemCount: propItem.length,
               itemBuilder: (context, i) {
                 final item = propItem[i];
-                
+
                 return Container(
                   margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
                   padding: const EdgeInsets.all(16),
@@ -155,25 +148,26 @@ class _MenuState extends State<Menu> {
                           ],
                         ),
                       ),
-                      IconButton(
-                        icon: const Icon(
-                          Icons.edit,
-                          color: Color.fromARGB(255, 167, 86, 86),
+                      if (user != null)
+                        IconButton(
+                          icon: const Icon(
+                            Icons.edit,
+                            color: Color.fromARGB(255, 167, 86, 86),
+                          ),
+                          onPressed: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => EditProduk(item: item),
+                              ),
+                            )
+                            .then(
+                              (_) {
+                                _loadItems();
+                              }
+                            );
+                          },
                         ),
-                        onPressed: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => EditProduk(item: item),
-                            ),
-                          )
-                          .then(
-                            (_) {
-                              _loadItems();
-                            }
-                          );
-                        },
-                      ),
                     ],
                   ),
                 );
@@ -189,7 +183,9 @@ class _MenuState extends State<Menu> {
             MaterialPageRoute(
               builder: (context) => const Tambah(),
             ),
-          );
+          ).then((_) {
+            _loadItems();
+          });
         },
         child: const Icon(Icons.add),
       ),

@@ -8,7 +8,7 @@ class MapsPage extends StatefulWidget {
 
 class _MapsPageState extends State<MapsPage> {
   late MapboxMapController mapController;
-  final String mapboxAccessToken = 'YOUR_MAPBOX_ACCESS_TOKEN'; // Ganti dengan token API Mapbox Anda
+  final String mapboxAccessToken = 'pk.eyJ1IjoieWVqdW5qaSIsImEiOiJjbTJpeThmOG8wcmU5MmpvZ25xZjF3cHI3In0.Hz5dK16HjUE6EJlX2DpwfA'; // Ganti dengan token API Mapbox Anda
 
   final LatLng center = LatLng(37.7749, -122.4194); // Lokasi pusat peta (contoh: San Francisco)
 

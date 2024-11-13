@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+
 import 'package:firebase_auth/firebase_auth.dart';
 
 import 'package:cyberprop/agen/menu.dart';
@@ -34,27 +35,26 @@ class _LoginState extends State<Login> {
   pass = TextEditingController();
   
   @override
-  void initState() {
-    checkAuthState(context);
-    super.initState();
-  }
-
-  @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color.fromARGB(99, 226, 139, 33), // TODO : ini perlu kah? nb warna transparan
+      backgroundColor: const Color.fromARGB(255, 244, 210, 169), // TODO : nb cek lagi warnanya
       appBar: AppBar(
         forceMaterialTransparency: true,
       ),
-      body: Center(
+      body: Padding(
+        padding: const EdgeInsets.only(
+          left: 128.0,
+          right: 128.0,
+        ),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisSize: MainAxisSize.max,
           children: [
             const Image(
               image: AssetImage('assets/logo.png'),
             ),
             const Text(
-              'Cyberprop (v0.pa) (UKS)',
+              'Cyberprop (v0.pa) (admin)',
               style: TextStyle(
                 color: Color.fromARGB(255, 167, 86, 86),
                 fontWeight: FontWeight.bold,
@@ -62,101 +62,80 @@ class _LoginState extends State<Login> {
               ),
             ),
             const SizedBox(height: 16.0),
-            SizedBox(
-              width: MediaQuery.of(context).size.width / 2,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    'Username',
-                    style: TextStyle(
-                      color: Color.fromARGB(255, 167, 86, 86),
-                      fontWeight: FontWeight.bold,
-                      fontSize: 16.0,
-                    ),
-                  ),
-                  SizedBox(
-                    height: 8.0
-                  ),
-                  TextField(
-                    decoration: InputDecoration(
-                      filled: true,
-                      fillColor: Color.fromARGB(255, 233, 239, 214),
-                      border: InputBorder.none,
-                    ),
-                    controller: user,
-                  ),
-                ],
+            Text(
+              'Username',
+              textAlign: TextAlign.left,
+              style: TextStyle(
+                color: Color.fromARGB(255, 167, 86, 86),
+                fontWeight: FontWeight.bold,
+                fontSize: 16.0,
               ),
             ),
-            const SizedBox(
-              height: 16.0
+            SizedBox(height: 8.0),
+            TextField(
+              decoration: InputDecoration(
+                filled: true,
+                fillColor: Color.fromARGB(255, 233, 239, 214),
+                border: InputBorder.none,
+              ),
+              controller: user,
             ),
-            SizedBox(
-              width: MediaQuery.of(context).size.width / 2,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    'Password',
-                    style: TextStyle(
-                      color: Color.fromARGB(255, 167, 86, 86),
-                      fontWeight: FontWeight.bold,
-                      fontSize: 16.0,
-                    ),
-                  ),
-                  const SizedBox(height: 8.0),
-                  TextField(
-                    obscureText: true,
-                    decoration: InputDecoration(
-                      filled: true,
-                      fillColor: Color.fromARGB(255, 233, 239, 214),
-                      border: InputBorder.none,
-                    ),
-                    controller: pass,
-                  ),
-                ],
+            const SizedBox(height: 16.0),
+            Text(
+              'Password',
+              textAlign: TextAlign.left,
+              style: TextStyle(
+                color: Color.fromARGB(255, 167, 86, 86),
+                fontWeight: FontWeight.bold,
+                fontSize: 16.0,
               ),
             ),
-            const SizedBox(height: 32.0),
-            SizedBox(
-              width: MediaQuery.of(context).size.width / 2,
-              child: ElevatedButton(
-                onPressed: () async {
-                  try {
-                    await FirebaseAuth.instance.signInWithEmailAndPassword(
-                      email: user.text,
-                      password: pass.text,
-                    );
-                  }
-                  on FirebaseAuthException catch (e) {
-                    setState(
-                      () {
-                        ScaffoldMessenger.of(context)
-                        .showSnackBar(
-                          SnackBar(
-                            content: Text(e.code)
-                          ),
-                        );
-                      }
-                    );
-                  }
-                  if (context.mounted) {
-                    checkAuthState(context);
-                  }
-                },
-                style: ElevatedButton.styleFrom(
-                  foregroundColor: Color.fromARGB(255, 233, 239, 214),
-                  backgroundColor: const Color.fromARGB(255, 167, 86, 86),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.zero,
-                  ),
+            const SizedBox(height: 8.0),
+            TextField(
+              obscureText: true,
+              decoration: InputDecoration(
+                filled: true,
+                fillColor: Color.fromARGB(255, 233, 239, 214),
+                border: InputBorder.none,
+              ),
+              controller: pass,
+            ),
+            const SizedBox(height: 24.0),
+            ElevatedButton(
+              onPressed: () async {
+                try {
+                  await FirebaseAuth.instance.signInWithEmailAndPassword(
+                    email: user.text,
+                    password: pass.text,
+                  );
+                }
+                on FirebaseAuthException catch (e) {
+                  setState( //TODO : ngapain di setstate ya..
+                    () {
+                      ScaffoldMessenger.of(context)
+                      .showSnackBar(
+                        SnackBar(
+                          content: Text(e.message.toString())
+                        ),
+                      );
+                    }
+                  );
+                }
+                if (context.mounted) {
+                  checkAuthState(context);
+                }
+              },
+              style: ElevatedButton.styleFrom(
+                foregroundColor: Color.fromARGB(255, 233, 239, 214),
+                backgroundColor: const Color.fromARGB(255, 167, 86, 86),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.zero,
                 ),
-                child: const Text(
-                  'Login',
-                  style: TextStyle(
-                    fontSize: 16.0,
-                  ),
+              ),
+              child: const Text(
+                'Login',
+                style: TextStyle(
+                  fontSize: 16.0,
                 ),
               ),
             ),
