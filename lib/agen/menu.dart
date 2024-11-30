@@ -11,23 +11,12 @@ final user = FirebaseAuth.instance.currentUser;
 
 class Menu extends StatefulWidget {
   const Menu({super.key});
-  
   @override
   State<Menu> createState() => _MenuState();
 }
 
 class _MenuState extends State<Menu> {
   final DataHelper dataHelper = DataHelper();
-  // List propItem = [];
-
-  // Future<void> _loadItems() async { //TODO : jangan pakai ini, pakai StreamBuilder nanti
-  //   List items = await dataHelper.fetch();
-  //   setState(
-  //     () {
-  //       propItem = items;
-  //     }
-  //   );
-  // }
 
   @override
   void initState() {

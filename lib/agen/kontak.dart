@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:path/path.dart';
 
 import 'package:url_launcher/url_launcher.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -51,7 +52,7 @@ class Contact extends StatelessWidget {
                   'https://vm.tiktok.com/ZMh9MSeVm/',
                 ),
               ],
-            ),
+            ), 
           ),
         ],
       ),
