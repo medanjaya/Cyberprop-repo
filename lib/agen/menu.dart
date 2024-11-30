@@ -1,7 +1,6 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+
 import 'package:cyberprop/datahelper.dart';
 import 'package:cyberprop/agen/login.dart';
 import 'package:cyberprop/agen/tambah_produk.dart';
@@ -32,16 +31,9 @@ class _MenuState extends State<Menu> {
 
   @override
   void initState() {
-    if (user != null) {
-      ScaffoldMessenger.of(context)
-      .showSnackBar(
-        SnackBar(
-          content: Text('Logged as admin.')
-        ),
-      );
-    }
     super.initState();
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -52,7 +44,7 @@ class _MenuState extends State<Menu> {
           StreamBuilder<User?>(
             stream: FirebaseAuth.instance.authStateChanges(),
             builder: (context, snapshot) {
-              if (isAdmin) {
+              if (user != null) {
                 return IconButton(
                   onPressed: () async {
                     await FirebaseAuth.instance.signOut();
@@ -186,9 +178,7 @@ class _MenuState extends State<Menu> {
             MaterialPageRoute(
               builder: (context) => const Tambah(),
             ),
-          ).then((_) {
-            _loadItems();
-          });
+          );
         },
         child: const Icon(Icons.add),
       ),
