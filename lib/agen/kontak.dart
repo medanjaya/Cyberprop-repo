@@ -88,6 +88,7 @@ class Contact extends StatelessWidget {
         title: Text(
           title,
           style: const TextStyle(
+            color: Colors.black,
             fontSize: 18.0,
             fontWeight: FontWeight.bold,
           ),
