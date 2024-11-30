@@ -12,23 +12,12 @@ final user = FirebaseAuth.instance.currentUser;
 
 class Menu extends StatefulWidget {
   const Menu({super.key});
-  
   @override
   State<Menu> createState() => _MenuState();
 }
 
 class _MenuState extends State<Menu> {
   final DataHelper dataHelper = DataHelper();
-  // List propItem = [];
-
-  // Future<void> _loadItems() async { //TODO : jangan pakai ini, pakai StreamBuilder nanti
-  //   List items = await dataHelper.fetch();
-  //   setState(
-  //     () {
-  //       propItem = items;
-  //     }
-  //   );
-  // }
 
   @override
   void initState() {
@@ -52,7 +41,7 @@ class _MenuState extends State<Menu> {
           StreamBuilder<User?>(
             stream: FirebaseAuth.instance.authStateChanges(),
             builder: (context, snapshot) {
-              if (isAdmin) {
+              if (user != null) {
                 return IconButton(
                   onPressed: () async {
                     await FirebaseAuth.instance.signOut();
@@ -186,9 +175,7 @@ class _MenuState extends State<Menu> {
             MaterialPageRoute(
               builder: (context) => const Tambah(),
             ),
-          ).then((_) {
-            _loadItems();
-          });
+          );
         },
         child: const Icon(Icons.add),
       ),

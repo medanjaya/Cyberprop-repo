@@ -71,11 +71,22 @@ class _TambahState extends State<Tambah> {
                     imageQuality: 80,
                   );
                   pickedImage = pickedFile;
-                  
-                  File imageFile = File(pickedImage!.path);
-                  convertedImage = await imageFile.readAsBytes();
 
-                  setState(() {});
+                  if (pickedImage != null) {
+                    File imageFile = File(pickedImage!.path);
+                    convertedImage = await imageFile.readAsBytes();
+                    setState(() {});
+                  }
+                  else {
+                    if (context.mounted) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                          content: Text('Tidak ada gambar yang dipilih!'),
+                          backgroundColor: Colors.red,
+                        ),
+                      );
+                    }
+                  }
                 },
                 child: Container(
                   width: 500,
