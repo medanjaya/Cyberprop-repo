@@ -4,9 +4,10 @@ import 'dart:typed_data';
 import 'package:flutter/material.dart';
 
 import 'package:image_picker/image_picker.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-import '../datahelper.dart';
-import '../model/model.dart';
+import 'package:cyberprop/datahelper.dart';
+import 'package:cyberprop/model/model.dart';
 
 class Tambah extends StatefulWidget {
   const Tambah({super.key});
@@ -18,7 +19,7 @@ class Tambah extends StatefulWidget {
 class _TambahState extends State<Tambah> {
   DataHelper dataHelper = DataHelper();
   
-  String dropValue = 'Rumah/ruko';
+  dynamic dropValue; //TODO : cek ini nanti  
   XFile? pickedImage;
   Uint8List? convertedImage;
   
@@ -34,11 +35,13 @@ class _TambahState extends State<Tambah> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text(
-          'Tambah Properti Baru',
-          style: TextStyle(color: Colors.white),
+        title: Text(
+          AppLocalizations.of(context)!.addnewproperty,
+          style: const TextStyle(
+            color: Colors.white,
+          ),
         ),
-        backgroundColor: const Color.fromARGB(255, 167, 86, 86),
+        backgroundColor: const Color.fromARGB(255, 168, 86, 86),
       ),
       body: SingleChildScrollView(
         child: Padding(
@@ -46,20 +49,20 @@ class _TambahState extends State<Tambah> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Text(
-                'Nama Properti',
-                style: TextStyle(
-                  color: Color.fromARGB(255, 167, 86, 86),
+              Text(
+                AppLocalizations.of(context)!.propertyname,
+                style: const TextStyle(
+                  color: Color.fromARGB(255, 168, 86, 86),
                   fontWeight: FontWeight.bold,
                   fontSize: 16.0,
                 ),
               ),
-              const SizedBox(height: 8),
+              const SizedBox(height: 8.0),
               TextField(
                 controller: namaController,
                 decoration: const InputDecoration(
                   filled: true,
-                  fillColor: Color.fromARGB(255, 233, 239, 214),
+                  fillColor: Color.fromARGB(255, 235, 240, 215),
                   border: InputBorder.none,
                 ),
               ),
@@ -71,22 +74,11 @@ class _TambahState extends State<Tambah> {
                     imageQuality: 80,
                   );
                   pickedImage = pickedFile;
+                  
+                  File imageFile = File(pickedImage!.path);
+                  convertedImage = await imageFile.readAsBytes();
 
-                  if (pickedImage != null) {
-                    File imageFile = File(pickedImage!.path);
-                    convertedImage = await imageFile.readAsBytes();
-                    setState(() {});
-                  }
-                  else {
-                    if (context.mounted) {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                          content: Text('Tidak ada gambar yang dipilih!'),
-                          backgroundColor: Colors.red,
-                        ),
-                      );
-                    }
-                  }
+                  setState(() {});
                 },
                 child: Container(
                   width: 500,
@@ -116,11 +108,11 @@ class _TambahState extends State<Tambah> {
                 icon: const Icon(Icons.arrow_drop_down),
                 elevation: 16,
                 style: const TextStyle(
-                  color: Color.fromARGB(255, 167, 86, 86),
+                  color: Color.fromARGB(255, 168, 86, 86),
                 ),
                 underline: Container(
                   height: 2,
-                  color: const Color.fromARGB(255, 167, 86, 86),
+                  color: const Color.fromARGB(255, 168, 86, 86),
                 ),
                 onChanged: (String? newValue) {
                   setState(
@@ -130,11 +122,11 @@ class _TambahState extends State<Tambah> {
                   );
                 },
                 items: <String>[
-                  'Rumah/ruko',
-                  'Apartemen/kondominium',
-                  'Villa',
-                  'Kantor',
-                  'Tanah',
+                  AppLocalizations.of(context)!.houseorshophouse,
+                  AppLocalizations.of(context)!.apartementorcondominium,
+                  AppLocalizations.of(context)!.villa,
+                  AppLocalizations.of(context)!.office,
+                  AppLocalizations.of(context)!.estate,
                 ]
                 .map<DropdownMenuItem<String>>(
                   (String value) {
@@ -146,10 +138,10 @@ class _TambahState extends State<Tambah> {
                 ).toList(),
               ),
               const SizedBox(height: 16.0),
-              const Text(
-                'Alamat',
-                style: TextStyle(
-                  color: Color.fromARGB(255, 167, 86, 86),
+              Text(
+                AppLocalizations.of(context)!.address,
+                style: const TextStyle(
+                  color: Color.fromARGB(255, 168, 86, 86),
                   fontWeight: FontWeight.bold,
                   fontSize: 16.0,
                 ),
@@ -159,42 +151,42 @@ class _TambahState extends State<Tambah> {
                 controller: alamatController,
                 decoration: const InputDecoration(
                   filled: true,
-                  fillColor: Color.fromARGB(255, 233, 239, 214),
+                  fillColor: Color.fromARGB(255, 235, 240, 215),
                   border: InputBorder.none,
                 ),
               ),
-              const SizedBox(height: 16),
-              const Text(
-                'Ukuran Properti',
-                style: TextStyle(
-                  color: Color.fromARGB(255, 167, 86, 86),
+              const SizedBox(height: 16.0),
+              Text(
+                AppLocalizations.of(context)!.size,
+                style: const TextStyle(
+                  color: Color.fromARGB(255, 168, 86, 86),
                   fontWeight: FontWeight.bold,
                   fontSize: 16.0,
                 ),
               ),
-              const SizedBox(height: 8),
+              const SizedBox(height: 8.0),
               Row(
                 children: [
                   Expanded(
                     child: TextField(
                       controller: panjangController,
-                      decoration: const InputDecoration(
-                        labelText: 'Panjang (meter)',
+                      decoration: InputDecoration(
+                        labelText: AppLocalizations.of(context)!.length,
                         filled: true,
-                        fillColor: Color.fromARGB(255, 233, 239, 214),
+                        fillColor: const Color.fromARGB(255, 235, 240, 215),
                         border: InputBorder.none,
                       ),
                       keyboardType: TextInputType.number,
                     ),
                   ),
-                  const SizedBox(width: 16),
+                  const SizedBox(width: 16.0),
                   Expanded(
                     child: TextField(
                       controller: lebarController,
-                      decoration: const InputDecoration(
-                        labelText: 'Lebar (meter)',
+                      decoration: InputDecoration(
+                        labelText: AppLocalizations.of(context)!.width,
                         filled: true,
-                        fillColor: Color.fromARGB(255, 233, 239, 214),
+                        fillColor: const Color.fromARGB(255, 235, 240, 215),
                         border: InputBorder.none,
                       ),
                       keyboardType: TextInputType.number,
@@ -202,11 +194,11 @@ class _TambahState extends State<Tambah> {
                   ),
                 ],
               ),
-              const SizedBox(height: 16),
-              const Text(
-                'Deskripsi',
-                style: TextStyle(
-                  color: Color.fromARGB(255, 167, 86, 86),
+              const SizedBox(height: 16.0),
+              Text(
+                AppLocalizations.of(context)!.description,
+                style: const TextStyle(
+                  color: Color.fromARGB(255, 168, 86, 86),
                   fontWeight: FontWeight.bold,
                   fontSize: 16.0,
                 ),
@@ -216,14 +208,14 @@ class _TambahState extends State<Tambah> {
                 controller: deskripsiController,
                 decoration: const InputDecoration(
                   filled: true,
-                  fillColor: Color.fromARGB(255, 233, 239, 214),
+                  fillColor: Color.fromARGB(255, 235, 240, 215),
                   border: InputBorder.none,
                 ),
               ),
-              const Text(
-                'Harga',
-                style: TextStyle(
-                  color: Color.fromARGB(255, 167, 86, 86),
+              Text(
+                AppLocalizations.of(context)!.price,
+                style: const TextStyle(
+                  color: Color.fromARGB(255, 168, 86, 86),
                   fontWeight: FontWeight.bold,
                   fontSize: 16.0,
                 ),
@@ -232,9 +224,9 @@ class _TambahState extends State<Tambah> {
               TextField(
                 controller: hargaController,
                 decoration: const InputDecoration(
-                  prefixText: 'Rp ',
+                  prefixText: 'Rp. ',
                   filled: true,
-                  fillColor: Color.fromARGB(255, 233, 239, 214),
+                  fillColor: Color.fromARGB(255, 235, 240, 215),
                   border: InputBorder.none,
                 ),
                 keyboardType: TextInputType.number,
@@ -262,7 +254,7 @@ class _TambahState extends State<Tambah> {
                         .showSnackBar(
                           SnackBar(
                             content: Text(
-                              'Data updated.'
+                              AppLocalizations.of(context)!.dataupdated
                             ),
                           ),
                         ),
@@ -270,15 +262,15 @@ class _TambahState extends State<Tambah> {
                     }
                   },
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color.fromARGB(255, 167, 86, 86),
+                    backgroundColor: const Color.fromARGB(255, 168, 86, 86),
                     padding: const EdgeInsets.symmetric(
                       horizontal: 32.0,
                       vertical: 12.0
                     ),
                   ),
-                  child: const Text(
-                    'Submit',
-                    style: TextStyle(
+                  child: Text(
+                    AppLocalizations.of(context)!.submit,
+                    style: const TextStyle(
                       color: Colors.white,
                       fontSize: 16.0,
                     ),

@@ -1,14 +1,15 @@
 import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-import '../datahelper.dart';
-import '../model/model.dart';
+import 'package:cyberprop/datahelper.dart';
+import 'package:cyberprop/model/model.dart';
 
 class EditProduk extends StatefulWidget {
   const EditProduk({super.key, required this.item});
 
-  final Prop item; // Menerima item yang akan diedit
+  final Prop item;
 
   @override
   State<EditProduk> createState() => _EditProdukState();
@@ -42,8 +43,8 @@ class _EditProdukState extends State<EditProduk> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Edit Produk'),
-        backgroundColor: const Color.fromARGB(255, 167, 86, 86),
+        title: Text(AppLocalizations.of(context)!.editproduct),
+        backgroundColor: const Color.fromARGB(255, 168, 86, 86),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -51,101 +52,109 @@ class _EditProdukState extends State<EditProduk> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Text(
-                'Nama Properti',
-                style: TextStyle(
-                  color: Color.fromARGB(255, 167, 86, 86),
+              Text(
+                AppLocalizations.of(context)!.propertyname,
+                style: const TextStyle(
+                  color: Color.fromARGB(255, 168, 86, 86),
                   fontWeight: FontWeight.bold,
-                  fontSize: 16,
+                  fontSize: 16.0,
                 ),
               ),
-              const SizedBox(height: 8),
+              const SizedBox(height: 8.0),
               TextField(
                 controller: _namaController,
                 decoration: const InputDecoration(
                   filled: true,
-                  fillColor: Color.fromARGB(255, 233, 239, 214),
+                  fillColor: Color.fromARGB(255, 235, 240, 215),
                   border: InputBorder.none,
                 ),
               ),
-              const SizedBox(height: 16),
+              const SizedBox(height: 16.0),
               DropdownButton<String>(
                 value: dropdownValue,
                 icon: const Icon(Icons.arrow_drop_down),
                 elevation: 16,
-                style: const TextStyle(color: Color.fromARGB(255, 167, 86, 86)),
+                style: const TextStyle(
+                  color: Color.fromARGB(255, 168, 86, 86)
+                ),
                 underline: Container(
-                  height: 2,
-                  color: const Color.fromARGB(255, 167, 86, 86),
+                  height: 2.0,
+                  color: const Color.fromARGB(255, 168, 86, 86),
                 ),
                 onChanged: (String? newValue) {
-                  setState(() {
-                    dropdownValue = newValue!;
-                  });
+                  setState(
+                    () {
+                      dropdownValue = newValue!;
+                    }
+                  );
                 },
                 items: <String>[
-                  'Rumah/ruko',
-                  'Apartemen/kondominium',
-                  'Villa',
-                  'Kantor',
-                  'Tanah'
-                ].map<DropdownMenuItem<String>>((String value) {
-                  return DropdownMenuItem<String>(
-                    value: value,
-                    child: Text(value),
-                  );
-                }).toList(),
+                  AppLocalizations.of(context)!.houseorshophouse,
+                  AppLocalizations.of(context)!.apartementorcondominium,
+                  AppLocalizations.of(context)!.villa,
+                  AppLocalizations.of(context)!.office,
+                  AppLocalizations.of(context)!.estate
+                ]
+                .map(
+                  (value) {
+                    return DropdownMenuItem<String>(
+                      value: value,
+                      child: Text(value),
+                    );
+                  },
+                )
+                .toList(),
               ),
-              const SizedBox(height: 16),
-              const Text(
-                'Alamat',
-                style: TextStyle(
-                  color: Color.fromARGB(255, 167, 86, 86),
+              const SizedBox(height: 16.0),
+              Text(
+                AppLocalizations.of(context)!.address,
+                style: const TextStyle(
+                  color: Color.fromARGB(255, 168, 86, 86),
                   fontWeight: FontWeight.bold,
-                  fontSize: 16,
+                  fontSize: 16.0,
                 ),
               ),
-              const SizedBox(height: 8),
+              const SizedBox(height: 8.0),
               TextField(
                 controller: _alamatController,
                 decoration: const InputDecoration(
                   filled: true,
-                  fillColor: Color.fromARGB(255, 233, 239, 214),
+                  fillColor: Color.fromARGB(255, 235, 240, 215),
                   border: InputBorder.none,
                 ),
               ),
-              const SizedBox(height: 16),
-              const Text(
-                'Ukuran Properti',
-                style: TextStyle(
-                  color: Color.fromARGB(255, 167, 86, 86),
+              const SizedBox(height: 16.0),
+              Text(
+                AppLocalizations.of(context)!.size,
+                style: const TextStyle(
+                  color: Color.fromARGB(255, 168, 86, 86),
                   fontWeight: FontWeight.bold,
-                  fontSize: 16,
+                  fontSize: 16.0,
                 ),
               ),
-              const SizedBox(height: 8),
+              const SizedBox(height: 8.0),
               Row(
                 children: [
                   Expanded(
                     child: TextField(
                       controller: _panjangController,
-                      decoration: const InputDecoration(
-                        labelText: 'Panjang (meter)',
+                      decoration: InputDecoration(
+                        labelText: AppLocalizations.of(context)!.length,
                         filled: true,
-                        fillColor: Color.fromARGB(255, 233, 239, 214),
+                        fillColor: Color.fromARGB(255, 235, 240, 215),
                         border: InputBorder.none,
                       ),
                       keyboardType: TextInputType.number,
                     ),
                   ),
-                  const SizedBox(width: 16),
+                  const SizedBox(width: 16.0),
                   Expanded(
                     child: TextField(
                       controller: _lebarController,
-                      decoration: const InputDecoration(
-                        labelText: 'Lebar (meter)',
+                      decoration: InputDecoration(
+                        labelText: AppLocalizations.of(context)!.width,
                         filled: true,
-                        fillColor: Color.fromARGB(255, 233, 239, 214),
+                        fillColor: Color.fromARGB(255, 235, 240, 215),
                         border: InputBorder.none,
                       ),
                       keyboardType: TextInputType.number,
@@ -153,61 +162,61 @@ class _EditProdukState extends State<EditProduk> {
                   ),
                 ],
               ),
-              const SizedBox(height: 16),
-              const Text(
-                'Deskripsi',
-                style: TextStyle(
-                  color: Color.fromARGB(255, 167, 86, 86),
+              const SizedBox(height: 16.0),
+              Text(
+                AppLocalizations.of(context)!.description,
+                style: const TextStyle(
+                  color: Color.fromARGB(255, 168, 86, 86),
                   fontWeight: FontWeight.bold,
-                  fontSize: 16,
+                  fontSize: 16.0,
                 ),
               ),
-              const SizedBox(height: 8),
+              const SizedBox(height: 8.0),
               TextField(
                 controller: _deskripsiController,
                 decoration: const InputDecoration(
                   filled: true,
-                  fillColor: Color.fromARGB(255, 233, 239, 214),
+                  fillColor: Color.fromARGB(255, 235, 240, 215),
                   border: InputBorder.none,
                 ),
               ),
-              const SizedBox(height: 16),
-              const Text(
-                'Harga',
-                style: TextStyle(
-                  color: Color.fromARGB(255, 167, 86, 86),
+              const SizedBox(height: 16.0),
+              Text(
+                AppLocalizations.of(context)!.price,
+                style: const TextStyle(
+                  color: Color.fromARGB(255, 168, 86, 86),
                   fontWeight: FontWeight.bold,
-                  fontSize: 16,
+                  fontSize: 16.0,
                 ),
               ),
-              const SizedBox(height: 8),
+              const SizedBox(height: 8.0),
               TextField(
                 controller: _hargaController,
                 decoration: const InputDecoration(
-                  prefixText: 'Rp ',
+                  prefixText: 'Rp. ',
                   filled: true,
-                  fillColor: Color.fromARGB(255, 233, 239, 214),
+                  fillColor: Color.fromARGB(255, 235, 240, 215),
                   border: InputBorder.none,
                 ),
                 keyboardType: TextInputType.number,
               ),
-              const SizedBox(height: 16),
+              const SizedBox(height: 16.0),
               Center(
                 child: ElevatedButton(
                   onPressed: () async {
                     await dataHelper.update(
                       Prop(
-                        id: widget.item.id, // Pastikan ID tetap
+                        id: widget.item.id,
                         nama: _namaController.text,
                         alamat: _alamatController.text,
                         panjang: int.parse(_panjangController.text),
                         lebar: int.parse(_lebarController.text),
                         deskripsi: _deskripsiController.text,
                         harga: int.parse(_hargaController.text),
-                        gambar: Uint8List(0),
+                        gambar: Uint8List(0), //TODO : urus ini
                         tipe: dropdownValue,
                       ),
-                      widget.item.id ?? 0, 
+                      widget.item.id ?? 0,
                     );
 
                     if (context.mounted) {
@@ -215,14 +224,17 @@ class _EditProdukState extends State<EditProduk> {
                     }
                   },
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color.fromARGB(255, 167, 86, 86),
-                    padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 12),
+                    backgroundColor: const Color.fromARGB(255, 168, 86, 86),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 32.0,
+                      vertical: 12.0,
+                    ),
                   ),
-                  child: const Text(
-                    'Update',
-                    style: TextStyle(
+                  child: Text(
+                    AppLocalizations.of(context)!.update,
+                    style: const TextStyle(
                       color: Colors.white,
-                      fontSize: 16,
+                      fontSize: 16.0,
                     ),
                   ),
                 ),

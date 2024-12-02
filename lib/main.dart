@@ -2,11 +2,13 @@ import 'package:flutter/material.dart';
 
 import 'package:provider/provider.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import 'firebase_options.dart';
-
 import 'package:cyberprop/agen/splash_screen.dart';
 import 'package:cyberprop/provider/lightdark_provider.dart';
+import 'package:cyberprop/provider/language_provider.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -15,8 +17,11 @@ void main() async {
   );
 
   runApp(
-    ChangeNotifierProvider(
-      create: (context) => LightDarkProvider(),
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (_) => LightDarkProvider()),
+        ChangeNotifierProvider(create: (_) => LanguageProvider()),
+      ],
       child: const MainApp(),
     ),
   );
@@ -27,20 +32,35 @@ class MainApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colorProvider = Provider.of<LightDarkProvider>(context);
+    final themeProvider = Provider.of<LightDarkProvider>(context);
+    final languageProvider = Provider.of<LanguageProvider>(context);
+
     return MaterialApp(
       title: 'Cyberprop | Property Marketplace',
       debugShowCheckedModeBanner: false,
-      
-      //TODO : bottomnav jadi putih waktu dark mode
       theme: ThemeData(
-        colorScheme: colorProvider.enableDarkMode 
-        ? ColorScheme.dark()
-        : ColorScheme.fromSeed(
-            seedColor: Colors.orange
-          ),
-        useMaterial3: false,
-      ),  
+        colorScheme: themeProvider.enableDarkMode
+          ? const ColorScheme.dark() 
+          : ColorScheme.fromSeed(seedColor: Colors.orange), 
+        bottomNavigationBarTheme: BottomNavigationBarThemeData(
+          backgroundColor: themeProvider.enableDarkMode
+            ? Colors.grey[900]
+            : Colors.white, 
+          selectedItemColor: themeProvider.enableDarkMode
+            ? Colors.orangeAccent
+            : Colors.orange,
+          unselectedItemColor: Colors.grey,
+        ),
+      ),
+      
+      localizationsDelegates: const [
+        AppLocalizations.delegate,
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+      ],
+      locale: Locale(languageProvider.currentLanguage), 
+      supportedLocales: AppLocalizations.supportedLocales,
       home: const SplashScreen(),
     );
   }

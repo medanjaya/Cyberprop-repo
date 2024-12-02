@@ -1,16 +1,12 @@
 import 'package:flutter/material.dart';
 
 class LanguageProvider with ChangeNotifier {
-  Locale _locale = const Locale('en'); // Default locale
+  String _currentLanguage = 'en';
 
-  Locale get locale => _locale;
+  String get currentLanguage => _currentLanguage;
 
-  void changeLanguage(String langCode) {
-    if (langCode == 'en') {
-      _locale = const Locale('en');
-    } else {
-      _locale = const Locale('id');
-    }
-    notifyListeners(); // Notifikasi kepada pendengar untuk memperbarui UI
+  void setLanguage(String language) {
+    _currentLanguage = language;
+    notifyListeners();
   }
 }

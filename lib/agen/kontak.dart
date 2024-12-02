@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:path/path.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import 'package:url_launcher/url_launcher.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -13,16 +13,16 @@ class Contact extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Kontak Agen'),
-        backgroundColor: const Color.fromARGB(255, 167, 86, 86),
+        title: Text(AppLocalizations.of(context)!.agentcontact),
+        backgroundColor: const Color.fromARGB(255, 168, 86, 86),
       ),
       body: Column(
         children: [
-          const Padding(
+          Padding(
             padding: EdgeInsets.all(16.0),
             child: Text(
-              'Daftar Kontak',
-              style: TextStyle(
+              AppLocalizations.of(context)!.contactlist,
+              style: const TextStyle(
                 fontSize: 24.0,
                 fontWeight: FontWeight.bold,
               ),
@@ -56,7 +56,6 @@ class Contact extends StatelessWidget {
           ),
         ],
       ),
-      bottomNavigationBar: CustomBottomNavigationBar(index: 0),
     );
   }
 
@@ -74,8 +73,8 @@ class Contact extends StatelessWidget {
           BoxShadow(
             color: Colors.grey.withOpacity(0.2),
             spreadRadius: 2.0,
-            blurRadius: 5.0,
-            offset: const Offset(0, 3),
+            blurRadius: 4.0,
+            offset: const Offset(0, 2),
           ),
         ],
       ),
@@ -83,7 +82,7 @@ class Contact extends StatelessWidget {
         leading: FaIcon(
           icon,
           size: 32.0,
-          color: const Color.fromARGB(255, 167, 86, 86),
+          color: const Color.fromARGB(255, 168, 86, 86),
         ),
         title: Text(
           title,
