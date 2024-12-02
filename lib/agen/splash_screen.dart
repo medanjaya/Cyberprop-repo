@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:cyberprop/agen/menu.dart';
+import 'package:cyberprop/agen/main_menu.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -11,14 +11,14 @@ class SplashScreen extends StatefulWidget {
 }
 
 class _SplashScreenState extends State<SplashScreen> {
-  void moveToNextScreen() {
+  void moveToNextScreen() { //TODO : ini nanti cari cara ngeload appnya, biar jadi loading beneran
     Timer(
       Duration(seconds: 3),
       () {
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(
-            builder: (context) => const Menu(),
+            builder: (context) => const MainMenu(),
           ),
         );
       },

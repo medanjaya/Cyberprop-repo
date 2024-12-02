@@ -47,7 +47,10 @@ class _MainMenuState extends State<MainMenu> {
             }
             else if (value == 2) {
               currentMenu = Settings();
-            }    
+            }
+            
+            i = value;
+            setState(() {});
           },
           backgroundColor: const Color.fromARGB(255, 255, 225, 185),
         ),
