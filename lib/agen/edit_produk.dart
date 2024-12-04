@@ -1,3 +1,4 @@
+//TODO : edit besar
 import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
@@ -141,7 +142,7 @@ class _EditProdukState extends State<EditProduk> {
                       decoration: InputDecoration(
                         labelText: AppLocalizations.of(context)!.length,
                         filled: true,
-                        fillColor: Color.fromARGB(255, 235, 240, 215),
+                        fillColor: const Color.fromARGB(255, 235, 240, 215),
                         border: InputBorder.none,
                       ),
                       keyboardType: TextInputType.number,
@@ -154,7 +155,7 @@ class _EditProdukState extends State<EditProduk> {
                       decoration: InputDecoration(
                         labelText: AppLocalizations.of(context)!.width,
                         filled: true,
-                        fillColor: Color.fromARGB(255, 235, 240, 215),
+                        fillColor: const Color.fromARGB(255, 235, 240, 215),
                         border: InputBorder.none,
                       ),
                       keyboardType: TextInputType.number,

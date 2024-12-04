@@ -36,7 +36,7 @@ class MainApp extends StatelessWidget {
     final languageProvider = Provider.of<LanguageProvider>(context);
 
     return MaterialApp(
-      title: 'Cyberprop | Property Marketplace',
+      title: 'Cyberprop',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         colorScheme: themeProvider.enableDarkMode
@@ -61,6 +61,7 @@ class MainApp extends StatelessWidget {
       ],
       locale: Locale(languageProvider.currentLanguage), 
       supportedLocales: AppLocalizations.supportedLocales,
+      
       home: const SplashScreen(),
     );
   }

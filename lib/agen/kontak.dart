@@ -4,8 +4,6 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
-import 'package:cyberprop/agen/bottom_nav.dart';
-
 class Contact extends StatelessWidget {
   const Contact({super.key});
 
@@ -13,14 +11,17 @@ class Contact extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(AppLocalizations.of(context)!.agentcontact),
+        title: Text(
+          AppLocalizations.of(context)!.agentcontact,
+          style: const TextStyle(color: Colors.white),
+        ),
         backgroundColor: const Color.fromARGB(255, 168, 86, 86),
       ),
       body: Column(
         children: [
           Padding(
-            padding: EdgeInsets.all(16.0),
-            child: Text(
+            padding: const EdgeInsets.all(16.0),
+            child: Text( //TODO : kayaknya redundant, ganti foto profil si om aja kali
               AppLocalizations.of(context)!.contactlist,
               style: const TextStyle(
                 fontSize: 24.0,
@@ -30,11 +31,11 @@ class Contact extends StatelessWidget {
           ),
           Expanded(
             child: ListView(
-              children: [
+              children: [  //TODO : sebelum publish, cek sekali lagi
                 _buildContactTile(
                   'WhatsApp',
                   FontAwesomeIcons.whatsapp,
-                  'https://wa.me/6289613713685?text=Test%20Message', //TODO : sebelum publish, ganti kontaknya yang bener
+                  'https://wa.me/6288263002120',
                 ),
                 _buildContactTile(
                   'Instagram',

@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
-
 import 'package:firebase_auth/firebase_auth.dart';
 
-import 'package:cyberprop/agen/menu.dart';
+import 'package:cyberprop/agen/main_menu.dart';
 
-void checkAuthState(context) {
+void checkAuthState(context) { //TODO : cek ini butuh atau nga sebenarnya
   FirebaseAuth.instance
   .authStateChanges()
   .listen(
@@ -13,7 +12,7 @@ void checkAuthState(context) {
         Navigator.of(context)
         .pushAndRemoveUntil(
           MaterialPageRoute(
-            builder: (context) => const Menu(),
+            builder: (context) => const MainMenu(),
           ),
           (Route route) => false
         );
@@ -31,82 +30,75 @@ class Login extends StatefulWidget {
 
 class _LoginState extends State<Login> {
   TextEditingController
-  user = TextEditingController(),
-  pass = TextEditingController();
+  userController = TextEditingController(),
+  passController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color.fromARGB(255, 244, 210, 169), // TODO : nb cek lagi warnanya
-      appBar: AppBar(
-        forceMaterialTransparency: true,
-      ),
+      appBar: AppBar(forceMaterialTransparency: true),
       body: Padding(
         padding: const EdgeInsets.only(
-          left: 128.0,
-          right: 128.0,
+          left: 96.0,
+          right: 96.0,
         ),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
-          mainAxisSize: MainAxisSize.max,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            const Image(
-              image: AssetImage('assets/logo.png'),
-            ),
-            const Text(
-              'Cyberprop (v0.pa) (admin)',
-              style: TextStyle(
-                color: Color.fromARGB(255, 167, 86, 86),
-                fontWeight: FontWeight.bold,
-                fontSize: 16.0,
-              ),
-            ),
-            const SizedBox(height: 16.0),
-            Text(
-              'Username',
-              textAlign: TextAlign.left,
-              style: TextStyle(
-                color: Color.fromARGB(255, 167, 86, 86),
-                fontWeight: FontWeight.bold,
-                fontSize: 16.0,
-              ),
-            ),
-            SizedBox(height: 8.0),
-            TextField(
-              decoration: InputDecoration(
-                filled: true,
-                fillColor: Color.fromARGB(255, 233, 239, 214),
-                border: InputBorder.none,
-              ),
-              controller: user,
-            ),
-            const SizedBox(height: 16.0),
-            Text(
-              'Password',
-              textAlign: TextAlign.left,
-              style: TextStyle(
-                color: Color.fromARGB(255, 167, 86, 86),
-                fontWeight: FontWeight.bold,
-                fontSize: 16.0,
+            const SizedBox(
+              width: 128.0,
+              height: 128.0,
+              child: Image(
+                image: AssetImage('assets/logo-new.png'),
               ),
             ),
             const SizedBox(height: 8.0),
+            const Text(
+              'Username',
+              textAlign: TextAlign.left,
+              style: TextStyle(
+                color: Color.fromARGB(255, 168, 86, 86),
+                fontWeight: FontWeight.bold,
+                fontSize: 16.0,
+              ),
+            ),
+            const SizedBox(height: 4.0),
             TextField(
-              obscureText: true,
-              decoration: InputDecoration(
+              decoration: const InputDecoration(
                 filled: true,
                 fillColor: Color.fromARGB(255, 233, 239, 214),
                 border: InputBorder.none,
               ),
-              controller: pass,
+              controller: userController,
+            ),
+            const SizedBox(height: 16.0),
+            const Text(
+              'Password',
+              textAlign: TextAlign.left,
+              style: TextStyle(
+                color: Color.fromARGB(255, 168, 86, 86),
+                fontWeight: FontWeight.bold,
+                fontSize: 16.0,
+              ),
+            ),
+            const SizedBox(height: 4.0),
+            TextField(
+              obscureText: true,
+              decoration: const InputDecoration(
+                filled: true,
+                fillColor: Color.fromARGB(255, 233, 239, 214),
+                border: InputBorder.none,
+              ),
+              controller: passController,
             ),
             const SizedBox(height: 24.0),
             ElevatedButton(
               onPressed: () async {
                 try {
                   await FirebaseAuth.instance.signInWithEmailAndPassword(
-                    email: user.text,
-                    password: pass.text,
+                    email: userController.text,
+                    password: passController.text,
                   );
                 }
                 on FirebaseAuthException catch (e) {
@@ -126,9 +118,9 @@ class _LoginState extends State<Login> {
                 }
               },
               style: ElevatedButton.styleFrom(
-                foregroundColor: Color.fromARGB(255, 233, 239, 214),
-                backgroundColor: const Color.fromARGB(255, 167, 86, 86),
-                shape: RoundedRectangleBorder(
+                foregroundColor: const Color.fromARGB(255, 233, 239, 214),
+                backgroundColor: const Color.fromARGB(255, 168, 86, 86),
+                shape: const RoundedRectangleBorder(
                   borderRadius: BorderRadius.zero,
                 ),
               ),
@@ -142,6 +134,7 @@ class _LoginState extends State<Login> {
           ],
         ),
       ),
+      backgroundColor: const Color.fromARGB(255, 245, 210, 170),
     );
   }
 }

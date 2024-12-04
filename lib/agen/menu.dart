@@ -7,7 +7,6 @@ import 'package:cyberprop/datahelper.dart'; //TODO : cek file ini
 import 'package:cyberprop/agen/login.dart';
 import 'package:cyberprop/agen/tambah_produk.dart';
 import 'package:cyberprop/agen/edit_produk.dart';
-import 'package:cyberprop/agen/bottom_nav.dart';
 
 class Menu extends StatefulWidget {
   const Menu({super.key});
@@ -52,7 +51,8 @@ class _MenuState extends State<Menu> {
             icon: Icon(
               user == null
               ? Icons.login
-              : Icons.logout
+              : Icons.logout,
+              color: Colors.white,
             ),
           ),
         ],
@@ -108,20 +108,23 @@ class _MenuState extends State<Menu> {
                         ),
                         child: Row(
                           children: [
-                            /*Padding(
+                            Padding(
                               padding: const EdgeInsets.only(right: 16.0),
                               child: item.get('photo') != null
-                              ? Image.memory(
-                                  item.get('get')('photo'),
+                              ? Image.network(
+                                  item.get('photo'),
                                   width: 96.0,
                                   height: 96.0,
                                   fit: BoxFit.cover,
                                 )
-                              : SizedBox(
+                              : const SizedBox(
                                   width: 96.0,
                                   height: 96.0,
+                                  child: Image(
+                                    image: AssetImage('assets/logo-new.png'),
+                                  ),
                                 ),
-                            ),*/
+                            ),
                             Expanded(
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -129,15 +132,31 @@ class _MenuState extends State<Menu> {
                                   Text(
                                     item.get('name'),
                                     style: const TextStyle(
+                                      color: Colors.black, //TODO : dry code kebawah, yang ada Colors.black nya
                                       fontSize: 18.0,
                                       fontWeight: FontWeight.bold,
                                     ),
                                   ),
-                                  Text(item.get('type')),
-                                  Text(item.get('address')),
-                                  Text(item.get('size-length').toString()),
-                                  Text(item.get('size-width').toString()),
-                                  Text(item.get('price').toString()),
+                                  Text(
+                                    item.get('type'),
+                                    style: const TextStyle(color: Colors.black),
+                                  ),
+                                  Text(
+                                    item.get('address'),
+                                    style: const TextStyle(color: Colors.black),
+                                  ),
+                                  Text(
+                                    item.get('size-length').toString(),
+                                    style: const TextStyle(color: Colors.black),
+                                  ),
+                                  Text(
+                                    item.get('size-width').toString(),
+                                    style: const TextStyle(color: Colors.black),
+                                  ),
+                                  Text(
+                                    item.get('price').toString(),
+                                    style: const TextStyle(color: Colors.black),
+                                  ),
                                 ],
                               ),
                             ),
@@ -180,7 +199,8 @@ class _MenuState extends State<Menu> {
           ),
         ],
       ),
-      floatingActionButton: FloatingActionButton(
+      floatingActionButton: user != null
+      ? FloatingActionButton(
         onPressed: () {
           Navigator.push(
             context,
@@ -190,7 +210,8 @@ class _MenuState extends State<Menu> {
           );
         },
         child: const Icon(Icons.add),
-      ),
+      )
+      : null, //TODO : mencurigakan
     );
   }
 }
