@@ -22,7 +22,10 @@ class _SettingsState extends State<Settings> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(AppLocalizations.of(context)!.settings),
+        title: Text(
+          AppLocalizations.of(context)!.settings,
+          style: const TextStyle(color: Colors.white),
+        ),
         backgroundColor: const Color.fromARGB(255, 168, 86, 86),
       ),
       body: Padding(
