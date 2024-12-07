@@ -1,4 +1,6 @@
 {
+  "title": "Cyberprop | Marketplace Properti",
+  "dataerror": "Ada yang salah, mohon hubungi admin Cyberprop.",
   "itemlist": "Daftar Produk",
   "blank": "Tidak ada produk yang tersedia",
   "contact": "Kontak",
@@ -29,5 +31,7 @@
   "language": "Bahasa",
   "selectlanguage": "Pilih Bahasa",
   "english": "Inggris",
-  "indonesian": "Indonesia"
+  "indonesian": "Indonesia",
+  "imagefail": "Gambar gagal di-upload: ",
+  "noimage": "Tidak ada gambar yang dipilih!"
 }

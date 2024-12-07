@@ -31,6 +31,14 @@ class _TambahState extends State<Tambah> {
 
   @override
   Widget build(BuildContext context) {
+    final Map<String, String> languageChange = {
+      'house': AppLocalizations.of(context)!.houseorshophouse,
+      'condo': AppLocalizations.of(context)!.apartementorcondominium,
+      'villa': AppLocalizations.of(context)!.villa,
+      'office': AppLocalizations.of(context)!.office,
+      'estate': AppLocalizations.of(context)!.estate,
+    };
+    
     return Scaffold(
       appBar: AppBar(
         title: Text(
@@ -89,7 +97,7 @@ class _TambahState extends State<Tambah> {
                       if (context.mounted) {
                         ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(
-                            content: Text('Gambar gagal diupload: $e'), //TODO : l10n
+                            content: Text(AppLocalizations.of(context)!.imagefail + e.toString()),
                             backgroundColor: Colors.red,
                           ),
                         );
@@ -100,8 +108,8 @@ class _TambahState extends State<Tambah> {
                   else {
                     if (context.mounted) {
                       ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                          content: Text('Tidak ada gambar yang dipilih!'), //TODO : l10n
+                        SnackBar(
+                          content: Text(AppLocalizations.of(context)!.noimage),
                           backgroundColor: Colors.red,
                         ),
                       );
@@ -150,17 +158,17 @@ class _TambahState extends State<Tambah> {
                   );
                 },
                 items: <String>[
-                  AppLocalizations.of(context)!.houseorshophouse,
-                  AppLocalizations.of(context)!.apartementorcondominium,
-                  AppLocalizations.of(context)!.villa,
-                  AppLocalizations.of(context)!.office,
-                  AppLocalizations.of(context)!.estate,
+                  'house',
+                  'condo',
+                  'villa',
+                  'office',
+                  'estate'
                 ]
                 .map<DropdownMenuItem<String>>(
                   (String value) {
                     return DropdownMenuItem<String>(
                       value: value,
-                      child: Text(value),
+                      child: Text(languageChange[value]!),
                     );
                   }
                 ).toList(),

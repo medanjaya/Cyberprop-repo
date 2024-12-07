@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-import 'package:cyberprop/datahelper.dart'; //TODO : cek file ini
 import 'package:cyberprop/agen/login.dart';
 import 'package:cyberprop/agen/tambah_produk.dart';
 import 'package:cyberprop/agen/edit_produk.dart';
@@ -20,13 +20,21 @@ class _MenuState extends State<Menu> {
   
   @override
   Widget build(BuildContext context) {
+    final Map<String, String> languageChange = {
+      'house': AppLocalizations.of(context)!.houseorshophouse,
+      'condo': AppLocalizations.of(context)!.apartementorcondominium,
+      'villa': AppLocalizations.of(context)!.villa,
+      'office': AppLocalizations.of(context)!.office,
+      'estate': AppLocalizations.of(context)!.estate,
+    };
+
     final User? user = FirebaseAuth.instance.currentUser; //TODO : awasi ini
     
     return Scaffold(
       appBar: AppBar(
-        title: const Text(
-          'Cyberprop | Marketplace Properti', //TODO : l10n
-          style: TextStyle(
+        title: Text(
+          AppLocalizations.of(context)!.title,
+          style: const TextStyle(
             color: Colors.white,
             fontSize: 16.0
           ),
@@ -59,11 +67,11 @@ class _MenuState extends State<Menu> {
       ),
       body: Column(
         children: [
-          const Padding(
-            padding: EdgeInsets.all(16.0),
+          Padding(
+            padding: const EdgeInsets.all(16.0),
             child: Text(
-              'Daftar Item', //TODO : l10n
-              style: TextStyle(
+              AppLocalizations.of(context)!.itemlist,
+              style: const TextStyle(
                 fontSize: 24.0,
                 fontWeight: FontWeight.bold,
               ),
@@ -138,7 +146,7 @@ class _MenuState extends State<Menu> {
                                     ),
                                   ),
                                   Text(
-                                    item.get('type'),
+                                    languageChange[item.get('type')]!,
                                     style: const TextStyle(color: Colors.black),
                                   ),
                                   Text(
@@ -161,7 +169,7 @@ class _MenuState extends State<Menu> {
                               ),
                             ),
                             //TODO : conditional nya beda sendiri, perlu diubah?
-                            /*if (user != null) IconButton(
+                            if (user != null) IconButton(
                               icon: const Icon(
                                 Icons.edit,
                                 color: Color.fromARGB(255, 168, 86, 86),
@@ -174,7 +182,7 @@ class _MenuState extends State<Menu> {
                                   ),
                                 );
                               },
-                            ),*/
+                            ),
                           ],
                         ),
                       );
@@ -182,16 +190,13 @@ class _MenuState extends State<Menu> {
                   );
                 }
                 else if (snapshot.hasError) {
-                  return const Center(
-                    child: Text('database-error'), //TODO : l10n
+                  return Center(
+                    child: Text(AppLocalizations.of(context)!.dataerror),
                   );
                 }
                 else {
-                  return const Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      CircularProgressIndicator(),
-                    ],
+                  return const Center(
+                    child: CircularProgressIndicator()
                   );
                 }
               }

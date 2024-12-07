@@ -1,4 +1,6 @@
 {
+  "title": "Cyberprop | Property Marketplace",
+  "dataerror": "Something's wrong, please inform Cyberprop admin.",
   "itemlist": "Item List",
   "blank": "No items available",
   "contact": "Contact",
@@ -29,5 +31,7 @@
   "language": "Language",
   "selectlanguage": "Select Language",
   "english": "English",
-  "indonesian": "Indonesian"
+  "indonesian": "Indonesian",
+  "imagefail": "Image upload failed: ",
+  "noimage": "No image chosen."
 }
