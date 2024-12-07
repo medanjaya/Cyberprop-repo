@@ -1,13 +1,10 @@
 import 'dart:io';
-import 'dart:typed_data';
-
 import 'package:flutter/material.dart';
 
-import 'package:image_picker/image_picker.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-
-import 'package:cyberprop/datahelper.dart';
-import 'package:cyberprop/model/model.dart';
+import 'package:image_picker/image_picker.dart';
 
 class Tambah extends StatefulWidget {
   const Tambah({super.key});
@@ -17,11 +14,12 @@ class Tambah extends StatefulWidget {
 }
 
 class _TambahState extends State<Tambah> {
-  DataHelper dataHelper = DataHelper();
+  final FirebaseFirestore db = FirebaseFirestore.instance; //TODO : ini di dalam atau luar build?
+  final Reference storeRef = FirebaseStorage.instance.ref();
   
-  dynamic dropValue; //TODO : cek ini nanti  
+  dynamic dropValue;
+  dynamic storeRefUrl; //TODO : cek ini dua dynamic nanti
   XFile? pickedImage;
-  Uint8List? convertedImage;
   
   TextEditingController
   namaController = TextEditingController(),
@@ -75,10 +73,40 @@ class _TambahState extends State<Tambah> {
                   );
                   pickedImage = pickedFile;
                   
-                  File imageFile = File(pickedImage!.path);
-                  convertedImage = await imageFile.readAsBytes();
-
-                  setState(() {});
+                  if (pickedImage != null) {
+                    final imageFile = File(pickedImage!.path);
+                    final newStoreRef = storeRef.child(pickedImage!.name);
+                    
+                    //TODO : masalahnya disini, ga jadi submit pun gambarnya udah ter-upload duluan
+                    try {
+                      await newStoreRef.putFile(imageFile).whenComplete(
+                        () async {
+                          storeRefUrl = await newStoreRef.getDownloadURL();
+                        }
+                      );
+                    }
+                    on FirebaseException catch (e) {
+                      if (context.mounted) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text('Gambar gagal diupload: $e'), //TODO : l10n
+                            backgroundColor: Colors.red,
+                          ),
+                        );
+                      }
+                    }  
+                    setState(() {});
+                  }
+                  else {
+                    if (context.mounted) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                          content: Text('Tidak ada gambar yang dipilih!'), //TODO : l10n
+                          backgroundColor: Colors.red,
+                        ),
+                      );
+                    }
+                  }
                 },
                 child: Container(
                   width: 500,
@@ -234,18 +262,20 @@ class _TambahState extends State<Tambah> {
               const SizedBox(height: 16.0),
               Center(
                 child: ElevatedButton(
-                  onPressed: () async {
-                    await dataHelper.insert(
-                      Prop(
-                        nama: namaController.text,
-                        gambar: convertedImage!,
-                        tipe: dropValue,
-                        alamat: alamatController.text,
-                        panjang: int.parse(panjangController.text),
-                        lebar: int.parse(lebarController.text),
-                        deskripsi: deskripsiController.text,
-                        harga: int.parse(hargaController.text),
-                      )
+                  onPressed: () {
+                    db.collection('property')
+                    .add(
+                      {
+                        'address': alamatController.text,
+                        'desc': deskripsiController.text,
+                        'location': const GeoPoint(0.0, 0.0), //TODO : nanti kita kejar abang Yap masalah ini
+                        'name': namaController.text,
+                        'photo': storeRefUrl, //TODO : ini juga
+                        'price': int.parse(hargaController.text),
+                        'size-length': int.parse(panjangController.text),
+                        'size-width': int.parse(lebarController.text),
+                        'type': dropValue,
+                      }
                     );
                     if (context.mounted) {
                       Navigator.pop(

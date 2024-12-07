@@ -1,16 +1,14 @@
-//TODO : edit besar
 import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import 'package:cyberprop/datahelper.dart';
-import 'package:cyberprop/model/model.dart';
 
 class EditProduk extends StatefulWidget {
   const EditProduk({super.key, required this.item});
 
-  final Prop item;
+  final dynamic item; //TODO : ubah ini
 
   @override
   State<EditProduk> createState() => _EditProdukState();

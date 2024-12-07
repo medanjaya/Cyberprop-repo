@@ -15,7 +15,7 @@ class MainMenu extends StatefulWidget {
 
 class _MainMenuState extends State<MainMenu> {
   int i = 1;
-  Widget currentMenu = Menu();
+  Widget currentMenu = const Menu(); //TODO : Incorrect use of ParentDataWidget
   
   @override
   Widget build(BuildContext context) {
@@ -38,13 +38,13 @@ class _MainMenuState extends State<MainMenu> {
         ],
         onTap: (value) { //TODO : dry code; pake key-pair
           if (value == 0) {
-            currentMenu = Contact();
+            currentMenu = const Contact();
           }
           else if (value == 1) {
-            currentMenu = Menu();
+            currentMenu = const Menu();
           }
           else if (value == 2) {
-            currentMenu = Settings();
+            currentMenu = const Settings();
           }
           i = value;
           setState(() {});
