@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-import 'package:cyberprop/agen/bottom_nav.dart';
 import 'package:cyberprop/provider/lightdark_provider.dart';
 import 'package:cyberprop/provider/language_provider.dart';
 
