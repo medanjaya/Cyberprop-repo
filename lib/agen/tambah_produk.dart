@@ -148,32 +148,34 @@ class _TambahState extends State<Tambah> {
                     onPressed: () async { //TODO : dry code kebawah
                       if (await Permission.camera.status.isGranted) {
                         final shotImage = await Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => const AccessCamera(),
-                          ),
-                        );
-                        
-                        final imageFile = File(shotImage!.path);
-                        final newStoreRef = storeRef.child('shotImage.jpg'); //TODO : ubah ini
-                        
-                        try {
-                          await newStoreRef.putFile(imageFile).whenComplete(
-                            () async {
-                              storeRefUrl = await newStoreRef.getDownloadURL();
-                            }
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => const AccessCamera(),
+                            ),
                           );
-                        }
-                        on FirebaseException catch (e) {
-                          if (context.mounted) {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(
-                                content: Text(AppLocalizations.of(context)!.imagefail + e.toString()),
-                                backgroundColor: Colors.red,
-                              ),
+                          
+                          final imageFile = File(shotImage!.path);
+                          final newStoreRef = storeRef.child('shotImage${shotImage.hashCode.toString()}.jpg'); //TODO : ubah ini
+                          
+                          try {
+                            await newStoreRef.putFile(imageFile).whenComplete(
+                              () async {
+                                storeRefUrl = await newStoreRef.getDownloadURL();
+                                pickedImage = shotImage;
+                                setState(() {});
+                              }
                             );
                           }
-                        }
+                          on FirebaseException catch (e) {
+                            if (context.mounted) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  content: Text(AppLocalizations.of(context)!.imagefail + e.toString()),
+                                  backgroundColor: Colors.red,
+                                ),
+                              );
+                            }
+                          }
                       }
                       else {
                         final status = await Permission.camera.request();
@@ -187,12 +189,14 @@ class _TambahState extends State<Tambah> {
                           );
                           
                           final imageFile = File(shotImage!.path);
-                          final newStoreRef = storeRef.child('shotImage.jpg'); //TODO : ubah ini
+                          final newStoreRef = storeRef.child('shotImage${shotImage.hashCode.toString()}.jpg'); //TODO : ubah ini
                           
                           try {
                             await newStoreRef.putFile(imageFile).whenComplete(
                               () async {
                                 storeRefUrl = await newStoreRef.getDownloadURL();
+                                pickedImage = shotImage;
+                                setState(() {});
                               }
                             );
                           }
