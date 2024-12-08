@@ -5,6 +5,9 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:permission_handler/permission_handler.dart';
+
+import 'package:cyberprop/agen/access_cam.dart';
 
 class EditProduk extends StatefulWidget {
   const EditProduk({super.key, required this.item});
@@ -87,77 +90,156 @@ class _EditProdukState extends State<EditProduk> {
                 ),
               ),
               const SizedBox(height: 16.0),
-              GestureDetector(
-                onTap: () async {
-                  final pickedFile = await ImagePicker().pickImage(
-                    source: ImageSource.gallery,
-                    imageQuality: 80,
-                  );
-                  pickedImage = pickedFile;
-                  
-                  if (pickedImage != null) {
-                    final imageFile = File(pickedImage!.path);
-                    final newStoreRef = storeRef.child(pickedImage!.name);
-                    
-                    //TODO : masalahnya disini, ga jadi submit pun gambarnya udah ter-upload duluan
-                    try {
-                      await newStoreRef.putFile(imageFile).whenComplete(
-                        () async {
-                          storeRefUrl = await newStoreRef.getDownloadURL();
+              Row(
+                children: [
+                  Expanded(
+                    child: GestureDetector(
+                      onTap: () async {
+                        final pickedFile = await ImagePicker().pickImage(
+                          source: ImageSource.gallery,
+                          imageQuality: 80,
+                        );
+                        pickedImage = pickedFile;
+                        
+                        if (pickedImage != null) {
+                          final imageFile = File(pickedImage!.path);
+                          final newStoreRef = storeRef.child(pickedImage!.name);
+                          
+                          //TODO : masalahnya disini, ga jadi submit pun gambarnya udah ter-upload duluan
+                          try {
+                            await newStoreRef.putFile(imageFile).whenComplete(
+                              () async {
+                                storeRefUrl = await newStoreRef.getDownloadURL();
+                              }
+                            );
+                          }
+                          on FirebaseException catch (e) {
+                            if (context.mounted) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  content: Text(AppLocalizations.of(context)!.imagefail + e.toString()),
+                                  backgroundColor: Colors.red,
+                                ),
+                              );
+                            }
+                          }  
+                          setState(() {});
                         }
-                      );
-                    }
-                    on FirebaseException catch (e) {
-                      if (context.mounted) {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                            content: Text(AppLocalizations.of(context)!.imagefail + e.toString()),
-                            backgroundColor: Colors.red,
+                        else {
+                          if (context.mounted) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content: Text(AppLocalizations.of(context)!.noimage),
+                                backgroundColor: Colors.red,
+                              ),
+                            );
+                          }
+                        }
+                      },
+                      child: Container(
+                        height: 96.0,
+                        decoration: BoxDecoration(
+                          border: Border.all(color: Colors.grey),
+                          borderRadius: BorderRadius.circular(8.0),
+                          color: pickedImage != null
+                          ? Colors.transparent
+                          : Colors.grey[200],
+                        ),
+                        child: pickedImage != null
+                        ? SizedBox(
+                          width: 150,
+                          height: 150,
+                          child: Image.file(
+                            File(pickedImage!.path),
+                            fit: BoxFit.cover,
+                          ),
+                        )
+                        : SizedBox(
+                          width: 150,
+                          height: 150,
+                          child: Image.network(
+                            widget.item.get('photo'),
+                            fit: BoxFit.cover,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                  IconButton(
+                    onPressed: () async { //TODO : dry code kebawah
+                      if (await Permission.camera.status.isGranted) {
+                        final shotImage = await Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const AccessCamera(),
                           ),
                         );
+                        
+                        final imageFile = File(shotImage!.path);
+                        final newStoreRef = storeRef.child('shotImage${shotImage.hashCode.toString()}.jpg'); //TODO : ubah ini
+                        
+                        try {
+                          await newStoreRef.putFile(imageFile).whenComplete(
+                            () async {
+                              storeRefUrl = await newStoreRef.getDownloadURL();
+                              pickedImage = shotImage;
+                              setState(() {});
+                            }
+                          );
+                        }
+                        on FirebaseException catch (e) {
+                          if (context.mounted) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content: Text(AppLocalizations.of(context)!.imagefail + e.toString()),
+                                backgroundColor: Colors.red,
+                              ),
+                            );
+                          }
+                        }
                       }
-                    }  
-                    setState(() {});
-                  }
-                  else {
-                    if (context.mounted) {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
-                          content: Text(AppLocalizations.of(context)!.noimage),
-                          backgroundColor: Colors.red,
-                        ),
-                      );
-                    }
-                  }
-                },
-                child: Container(
-                  width: 500,
-                  height: 100,
-                  decoration: BoxDecoration(
-                    border: Border.all(color: Colors.grey),
-                    borderRadius: BorderRadius.circular(8.0),
-                    color: pickedImage != null
-                    ? Colors.transparent
-                    : Colors.grey[200],
+                      else {
+                        final status = await Permission.camera.request();
+
+                        if (status == PermissionStatus.granted) {
+                          final shotImage = await Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => const AccessCamera(),
+                            ),
+                          );
+                          
+                          final imageFile = File(shotImage!.path);
+                          final newStoreRef = storeRef.child('shotImage${shotImage.hashCode.toString()}.jpg'); //TODO : ubah ini
+                          
+                          try {
+                            await newStoreRef.putFile(imageFile).whenComplete(
+                              () async {
+                                storeRefUrl = await newStoreRef.getDownloadURL();
+                                pickedImage = shotImage;
+                                setState(() {});
+                              }
+                            );
+                          }
+                          on FirebaseException catch (e) {
+                            if (context.mounted) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  content: Text(AppLocalizations.of(context)!.imagefail + e.toString()),
+                                  backgroundColor: Colors.red,
+                                ),
+                              );
+                            }
+                          }
+                        }
+                        else if (status == PermissionStatus.permanentlyDenied) {
+                          openAppSettings();
+                        }
+                      }
+                    },
+                    icon: const Icon(Icons.camera_alt_outlined)
                   ),
-                  child: pickedImage != null
-                  ? SizedBox(
-                    width: 150,
-                    height: 150,
-                    child: Image.file(
-                      File(pickedImage!.path),
-                      fit: BoxFit.cover,
-                    ),
-                  )
-                  : SizedBox(
-                    width: 150,
-                    height: 150,
-                    child: Image.network(
-                      widget.item.get('photo'),
-                      fit: BoxFit.cover,
-                    ),
-                  ),
-                ),
+                ],
               ),
               const SizedBox(height: 16.0),
               DropdownButton<String>(
