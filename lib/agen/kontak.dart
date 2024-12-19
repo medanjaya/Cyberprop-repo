@@ -29,6 +29,10 @@ class Contact extends StatelessWidget {
               ),
             ),
           ),
+          const CircleAvatar( //TODO : nanti tambahkan profil si om
+            radius: 96.0,
+          ),
+          const SizedBox(height: 16.0),
           Expanded(
             child: ListView(
               children: [  //TODO : sebelum publish, cek sekali lagi

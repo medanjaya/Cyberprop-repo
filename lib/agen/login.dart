@@ -3,24 +3,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 
 import 'package:cyberprop/agen/main_menu.dart';
 
-void checkAuthState(context) { //TODO : cek ini butuh atau nga sebenarnya
-  FirebaseAuth.instance
-  .authStateChanges()
-  .listen(
-    (User? user) {
-      if (user != null) {
-        Navigator.of(context)
-        .pushAndRemoveUntil(
-          MaterialPageRoute(
-            builder: (context) => const MainMenu(),
-          ),
-          (Route route) => false
-        );
-      }
-    },
-  );
-}
-
 class Login extends StatefulWidget {
   const Login({super.key});
 
@@ -102,20 +84,32 @@ class _LoginState extends State<Login> {
                   );
                 }
                 on FirebaseAuthException catch (e) {
-                  setState( //TODO : ngapain di setstate ya..
+                  setState(
                     () {
                       ScaffoldMessenger.of(context)
                       .showSnackBar(
                         SnackBar(
-                          content: Text(e.message.toString())
+                          content: Text(e.message.toString()) //TODO : dis is not perfek
                         ),
                       );
                     }
                   );
                 }
-                if (context.mounted) {
-                  checkAuthState(context);
-                }
+                FirebaseAuth.instance
+                .authStateChanges()
+                .listen(
+                  (User? user) {
+                    if (user != null && context.mounted) { //TODO : perhatikan context.mounted nya
+                      Navigator.of(context)
+                      .pushAndRemoveUntil(
+                        MaterialPageRoute(
+                          builder: (context) => const MainMenu(),
+                        ),
+                        (Route route) => false
+                      );
+                    }
+                  },
+                );
               },
               style: ElevatedButton.styleFrom(
                 foregroundColor: const Color.fromARGB(255, 233, 239, 214),

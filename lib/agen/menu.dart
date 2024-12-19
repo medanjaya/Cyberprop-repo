@@ -15,8 +15,9 @@ class Menu extends StatefulWidget {
 }
 
 class _MenuState extends State<Menu> {
-  final FirebaseFirestore db = FirebaseFirestore.instance; //TODO : ini di dalam atau luar build?
-  String key = '';
+  final FirebaseFirestore db = FirebaseFirestore.instance;
+  String itemKey = '';
+  bool itemDelete = false;
   
   @override
   Widget build(BuildContext context) {
@@ -28,7 +29,7 @@ class _MenuState extends State<Menu> {
       'estate': AppLocalizations.of(context)!.estate,
     };
 
-    final User? user = FirebaseAuth.instance.currentUser; //TODO : awasi ini
+    final User? user = FirebaseAuth.instance.currentUser;
     
     return Scaffold(
       appBar: AppBar(
@@ -77,6 +78,38 @@ class _MenuState extends State<Menu> {
               ),
             ),
           ),
+          Padding(
+            padding: const EdgeInsets.only(
+              left: 16.0,
+              right: 12.0,
+              ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                Expanded(
+                  child: TextField(
+                    onChanged: (value) {
+                      itemKey = value;
+                    },
+                    decoration: const InputDecoration(
+                      hintText: 'Search item by name' //TODO : l10n
+                    ),
+                  ),
+                ),
+                const SizedBox(width: 4.0),
+                IconButton(
+                  onPressed: () {
+                    setState(() {});
+                  },
+                  icon: const Icon(
+                    Icons.search,
+                    size: 32.0,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          const SizedBox(height: 8.0),
           Expanded(
             child: StreamBuilder(
               stream: db.collection('property').snapshots(),
@@ -86,7 +119,7 @@ class _MenuState extends State<Menu> {
                     (e) =>
                       e.get('name').toString().toLowerCase()
                       .contains(
-                        key.toLowerCase(),
+                        itemKey.toLowerCase(),
                       ),
                   )
                   .toList();
@@ -114,77 +147,147 @@ class _MenuState extends State<Menu> {
                             ),
                           ],
                         ),
-                        child: Row(
-                          children: [
-                            Padding(
-                              padding: const EdgeInsets.only(right: 16.0),
-                              child: item.get('photo') != null
-                              ? Image.network(
-                                  item.get('photo'),
-                                  width: 96.0,
-                                  height: 96.0,
-                                  fit: BoxFit.cover,
-                                )
-                              : const SizedBox(
-                                  width: 96.0,
-                                  height: 96.0,
-                                  child: Image(
-                                    image: AssetImage('assets/logo-new.png'),
-                                  ),
-                                ),
-                            ),
-                            Expanded(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
+                        child: (i + 1) % 6 != 0 //TODO : atau nilainya mau dirandom aja?
+                        ? Column(
+                            children: [
+                              Row(
                                 children: [
-                                  Text(
-                                    item.get('name'),
-                                    style: const TextStyle(
-                                      color: Colors.black, //TODO : dry code kebawah, yang ada Colors.black nya
-                                      fontSize: 18.0,
-                                      fontWeight: FontWeight.bold,
+                                  const SizedBox( //TODO : untuk map kalau jadi
+                                    width: 128.0,
+                                    height: 128.0,
+                                    child: ColoredBox(
+                                      color: Colors.black,
+                                      child: Text(
+                                        'tambahkan lokasi disini',
+                                        style: TextStyle(
+                                          color: Colors.white,
+                                        ),
+                                      ),
                                     ),
                                   ),
-                                  Text(
-                                    languageChange[item.get('type')]!,
-                                    style: const TextStyle(color: Colors.black),
-                                  ),
-                                  Text(
-                                    item.get('address'),
-                                    style: const TextStyle(color: Colors.black),
-                                  ),
-                                  Text(
-                                    item.get('size-length').toString(),
-                                    style: const TextStyle(color: Colors.black),
-                                  ),
-                                  Text(
-                                    item.get('size-width').toString(),
-                                    style: const TextStyle(color: Colors.black),
-                                  ),
-                                  Text(
-                                    item.get('price').toString(),
-                                    style: const TextStyle(color: Colors.black),
+                                  const SizedBox(width: 8.0),
+                                  Expanded(
+                                    child: item.get('photo') != null
+                                    ? Image.network(
+                                        item.get('photo'),
+                                        width: 128.0,
+                                        height: 128.0,
+                                        fit: BoxFit.fitWidth,
+                                      )
+                                    : const SizedBox(
+                                        width: 128.0,
+                                        height: 128.0,
+                                        child: Image(
+                                          image: AssetImage('assets/logo-new.png'),
+                                        ),
+                                      ),
                                   ),
                                 ],
                               ),
-                            ),
-                            //TODO : conditional nya beda sendiri, perlu diubah?
-                            if (user != null) IconButton(
-                              icon: const Icon(
-                                Icons.edit,
-                                color: Color.fromARGB(255, 168, 86, 86),
-                              ),
-                              onPressed: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => EditProduk(item: item),
+                              const SizedBox(height: 4.0),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        item.get('name'),
+                                        style: const TextStyle(
+                                          color: Colors.black, //TODO : dry code kebawah, yang ada Colors.black nya
+                                          fontSize: 18.0,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                      Text(
+                                        languageChange[item.get('type')]!,
+                                        style: const TextStyle(color: Colors.black),
+                                      ),
+                                      Text(
+                                        item.get('address'),
+                                        style: const TextStyle(color: Colors.black),
+                                      ),
+                                      Text(
+                                        item.get('size-length').toString(),
+                                        style: const TextStyle(color: Colors.black),
+                                      ),
+                                      Text(
+                                        item.get('size-width').toString(),
+                                        style: const TextStyle(color: Colors.black),
+                                      ),
+                                      Text(
+                                        item.get('price').toString(),
+                                        style: const TextStyle(color: Colors.black),
+                                      ),
+                                    ],
                                   ),
-                                );
-                              },
+                                  //TODO : conditional nya beda sendiri, perlu diubah?
+                                  Column(
+                                    children: user != null
+                                    ? [
+                                        IconButton(
+                                          icon: const Icon(
+                                            Icons.edit,
+                                            color: Color.fromARGB(255, 168, 86, 86),
+                                          ),
+                                          onPressed: () {
+                                            Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                builder: (context) => EditProduk(item: item),
+                                              ),
+                                            );
+                                          },
+                                        ),
+                                        //TODO : belum jalan, mau diurus nanti
+                                        IconButton(
+                                          onPressed: () {
+                                            itemDelete = true;
+                                            ScaffoldMessenger.of(context)
+                                            .showSnackBar(
+                                              SnackBar(
+                                                //TODO : ubah ke 'This item will be deleted in 3 seconds'
+                                                content: const Text('Choose an item to delete.'), //TODO : l10n
+                                                duration: const Duration(seconds: 8),
+                                                action: SnackBarAction(
+                                                  label: 'Cancel',
+                                                  onPressed: () {
+                                                    ScaffoldMessenger.of(context)
+                                                    .hideCurrentSnackBar();
+                                                  }
+                                                ),
+                                              ),
+                                            )
+                                            .closed
+                                            .then(
+                                              (value) => itemDelete = false,
+                                            );
+                                          },
+                                          icon: const Icon(
+                                            Icons.delete,
+                                            color: Color.fromARGB(255, 168, 86, 86),
+                                          ),
+                                        ),
+                                      ]
+                                    : [], //TODO : cek dis
+                                  ),
+                                ],
+                              ),
+                            ],
+                          )
+                        : const SizedBox( //TODO : tambahkan AdMob disini
+                            width: 128.0,
+                            height: 128.0,
+                            child: ColoredBox(
+                              color: Colors.black,
+                              child: Text(
+                                'tambahkan Admob disini',
+                                style: TextStyle(
+                                  color: Colors.white,
+                                ),
+                              ),
                             ),
-                          ],
-                        ),
+                          ),
                       );
                     },
                   );
