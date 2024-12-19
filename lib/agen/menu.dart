@@ -106,6 +106,15 @@ class _MenuState extends State<Menu> {
                     size: 32.0,
                   ),
                 ),
+                IconButton(
+                  onPressed: () {
+                    //TODO : tambah yang ajaib-ajaib disini
+                  },
+                  icon: const Icon(
+                    Icons.filter_alt_outlined,
+                    size: 32.0,
+                  ),
+                ),
               ],
             ),
           ),
