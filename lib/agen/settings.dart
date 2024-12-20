@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-
 import 'package:provider/provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:awesome_notifications/awesome_notifications.dart';
 
 import 'package:cyberprop/provider/lightdark_provider.dart';
 import 'package:cyberprop/provider/language_provider.dart';
@@ -13,11 +13,60 @@ class Settings extends StatefulWidget {
   State<Settings> createState() => _SettingsState();
 }
 
-class _SettingsState extends State<Settings> {
+class MyNotification {
+  late BuildContext context;
+  MyNotification(BuildContext context) {
+    this.context = context;
+  }
+  Future<void> createBasicNotification() async {
+    AwesomeNotifications().isNotificationAllowed().then((isAllowed) {
+      if (!isAllowed) {
+        AwesomeNotifications()
+        .requestPermissionToSendNotifications()
+        .then((_) => Navigator.pop(context));
+      }
+    });
+      await AwesomeNotifications().createNotification(
+        content: NotificationContent(
+          id: 0,
+          channelKey: 'basic_channel',
+          title: 'Cyberprop',
+          body: 'Pengingat ada properti mau dibeli',
+        ),
+      );
+  }
+
+  Future<void> createScheduleNotification() async {
+    AwesomeNotifications().isNotificationAllowed().then((isAllowed) {
+      if (!isAllowed) {
+        AwesomeNotifications()
+        .requestPermissionToSendNotifications()
+        .then((_) => Navigator.pop(context));
+      }
+    });
+    print("KELUAR");
+    await AwesomeNotifications().createNotification(
+      content: NotificationContent(
+        id: 1, 
+        channelKey: 'schedule_channel',
+        title: 'Notification every single minute',
+        body: 'This notification was scheduled to repeat every minute.',
+        ),
+        schedule: NotificationCalendar.fromDate(
+          date: DateTime.now()
+          // date: DateTime.now().add(const Duration(seconds: 60))
+        )
+      );
+    print("KELUAR2");
+  }
+}
+
+class _SettingsState extends State<Settings> {  
   @override
   Widget build(BuildContext context) {
     final themeProvider = Provider.of<LightDarkProvider>(context);
     final languageProvider = Provider.of<LanguageProvider>(context);
+    MyNotification notify = MyNotification(context);
 
     return Scaffold(
       appBar: AppBar(
@@ -50,11 +99,9 @@ class _SettingsState extends State<Settings> {
                   value: themeProvider.enableDarkMode,
                   activeColor: const Color.fromARGB(255, 100, 185, 255),
                   onChanged: (e) {
-                    setState(
-                      () {
-                        themeProvider.setBrightness = e;
-                      }
-                    );
+                    setState(() {
+                      themeProvider.setBrightness = e;
+                    });
                   },
                 ),
               ],
@@ -84,6 +131,16 @@ class _SettingsState extends State<Settings> {
                 ),
               ],
             ),
+            const SizedBox(height: 18.0),
+             Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                const Text('Notifikasi'),
+                ElevatedButton(onPressed: (){
+                  notify.createBasicNotification();
+                }, child: Text('Notify')),
+              ]
+             ),
           ],
         ),
       ),
