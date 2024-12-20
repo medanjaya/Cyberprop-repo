@@ -1,3 +1,4 @@
+import 'package:cyberprop/coba-notify.dart';
 import 'package:flutter/material.dart';
 
 import 'package:provider/provider.dart';
@@ -10,6 +11,7 @@ import 'firebase_options.dart';
 import 'package:cyberprop/agen/splash_screen.dart';
 import 'package:cyberprop/provider/lightdark_provider.dart';
 import 'package:cyberprop/provider/language_provider.dart';
+import 'package:awesome_notifications/awesome_notifications.dart'; // Tambahkan import ini
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -22,6 +24,23 @@ void main() async {
     androidProvider: AndroidProvider.playIntegrity,
     appleProvider: AppleProvider.appAttest,
   );
+
+  AwesomeNotifications().initialize('', [
+    NotificationChannel(
+      channelKey: 'basic_channel', 
+      channelName: 'Basic Notifications', 
+      defaultColor: Colors.teal,
+      importance: NotificationImportance.High,
+      channelShowBadge: true,
+      channelDescription: 'For Basic Notification'),
+    NotificationChannel(
+      channelKey: 'schedule_channel', 
+      channelName: 'Schedule Notifications', 
+      defaultColor: Colors.teal,
+      importance: NotificationImportance.High,
+      channelShowBadge: true,
+      channelDescription: 'For Schedule Notification')
+  ]);
 
   runApp(
     MultiProvider(
