@@ -33,5 +33,10 @@
   "english": "English",
   "indonesian": "Indonesian",
   "imagefail": "Image upload failed: ",
-  "noimage": "No image chosen."
+  "noimage": "No image chosen.",
+  "reminder": "Reminder",
+  "thisisyour": "This is your",
+  "notifafter": "notification after",
+  "seconds": "seconds",
+  "notifyme": "Notify me"
 }
