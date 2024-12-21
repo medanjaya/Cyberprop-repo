@@ -33,5 +33,10 @@
   "english": "Inggris",
   "indonesian": "Indonesia",
   "imagefail": "Gambar gagal di-upload: ",
-  "noimage": "Tidak ada gambar yang dipilih!"
+  "noimage": "Tidak ada gambar yang dipilih!",
+  "reminder": "Pengingat",
+  "thisisyour": "Ini adalah notifikasi ke",
+  "notifafter": "Setelah",
+  "seconds": "Detik",
+  "notifyme": "Ingatkan aku"
 }
