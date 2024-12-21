@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
-
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-
 import 'package:cyberprop/agen/login.dart';
 import 'package:cyberprop/agen/tambah_produk.dart';
 import 'package:cyberprop/agen/edit_produk.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 
 class Menu extends StatefulWidget {
   const Menu({super.key});
@@ -18,7 +17,37 @@ class _MenuState extends State<Menu> {
   final FirebaseFirestore db = FirebaseFirestore.instance;
   String itemKey = '';
   bool itemDelete = false;
-  
+
+  late BannerAd bannerAd;
+  bool isBannerReady = false;
+
+  @override
+  void initState() {
+    super.initState();
+    loadBannerAd();
+  }
+
+  void loadBannerAd() {
+    bannerAd = BannerAd(
+      size: AdSize.banner,
+      adUnitId: "ca-app-pub-3940256099942544/6300978111",
+      listener: BannerAdListener(
+        onAdLoaded: (ad) {
+          setState(() {
+            isBannerReady = true;
+          });
+        },
+        onAdFailedToLoad: (ad, error) {
+          isBannerReady = false;
+          bannerAd.dispose();
+        },
+      ),
+      request: const AdRequest(),
+    );
+    bannerAd.load();
+  }
+
+
   @override
   Widget build(BuildContext context) {
     final Map<String, String> languageChange = {
@@ -30,7 +59,7 @@ class _MenuState extends State<Menu> {
     };
 
     final User? user = FirebaseAuth.instance.currentUser;
-    
+
     return Scaffold(
       appBar: AppBar(
         title: Text(
@@ -137,7 +166,7 @@ class _MenuState extends State<Menu> {
                     itemCount: filteredSnapshot.length,
                     itemBuilder: (context, i) {
                       final item = filteredSnapshot[i];
-                      
+
                       return Container(
                         margin: const EdgeInsets.symmetric(
                           vertical: 8.0,
@@ -284,18 +313,10 @@ class _MenuState extends State<Menu> {
                               ),
                             ],
                           )
-                        : const SizedBox( //TODO : tambahkan AdMob disini
-                            width: 128.0,
-                            height: 128.0,
-                            child: ColoredBox(
-                              color: Colors.black,
-                              child: Text(
-                                'tambahkan Admob disini',
-                                style: TextStyle(
-                                  color: Colors.white,
-                                ),
-                              ),
-                            ),
+                        : SizedBox( //TODO : tambahkan AdMob disini
+                            width: bannerAd.size.width.toDouble(),
+                            height: bannerAd.size.height.toDouble(),
+                            child: AdWidget(ad: bannerAd),
                           ),
                       );
                     },

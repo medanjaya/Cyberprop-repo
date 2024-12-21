@@ -16,7 +16,7 @@ class MainMenu extends StatefulWidget {
 class _MainMenuState extends State<MainMenu> {
   int i = 1;
   Widget currentMenu = const Menu(); //TODO : Incorrect use of ParentDataWidget
-  
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
