@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
+
 import 'package:cyberprop/agen/login.dart';
 import 'package:cyberprop/agen/tambah_produk.dart';
 import 'package:cyberprop/agen/edit_produk.dart';
-import 'package:google_mobile_ads/google_mobile_ads.dart';
+import 'package:cyberprop/agen/maps.dart';
 
 class Menu extends StatefulWidget {
   const Menu({super.key});
@@ -33,9 +36,11 @@ class _MenuState extends State<Menu> {
       adUnitId: "ca-app-pub-3940256099942544/6300978111",
       listener: BannerAdListener(
         onAdLoaded: (ad) {
-          setState(() {
-            isBannerReady = true;
-          });
+          setState(
+            () {
+              isBannerReady = true;
+            }
+          );
         },
         onAdFailedToLoad: (ad, error) {
           isBannerReady = false;
@@ -46,7 +51,6 @@ class _MenuState extends State<Menu> {
     );
     bannerAd.load();
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -137,7 +141,12 @@ class _MenuState extends State<Menu> {
                 ),
                 IconButton(
                   onPressed: () {
-                    //TODO : tambah yang ajaib-ajaib disini
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const SampleMaps()
+                      ),
+                    );
                   },
                   icon: const Icon(
                     Icons.filter_alt_outlined,
@@ -187,137 +196,137 @@ class _MenuState extends State<Menu> {
                         ),
                         child: (i + 1) % 6 != 0 //TODO : atau nilainya mau dirandom aja?
                         ? Column(
-                            children: [
-                              Row(
-                                children: [
-                                  const SizedBox( //TODO : untuk map kalau jadi
-                                    width: 128.0,
-                                    height: 128.0,
-                                    child: ColoredBox(
-                                      color: Colors.black,
-                                      child: Text(
-                                        'tambahkan lokasi disini',
-                                        style: TextStyle(
-                                          color: Colors.white,
-                                        ),
+                          children: [
+                            Row(
+                              children: [
+                                const SizedBox( //TODO : untuk map kalau jadi
+                                  width: 128.0,
+                                  height: 128.0,
+                                  child: ColoredBox(
+                                    color: Colors.black,
+                                    child: Text(
+                                      'tambahkan lokasi disini',
+                                      style: TextStyle(
+                                        color: Colors.white,
                                       ),
                                     ),
                                   ),
-                                  const SizedBox(width: 8.0),
-                                  Expanded(
-                                    child: item.get('photo') != null
-                                    ? Image.network(
-                                        item.get('photo'),
-                                        width: 128.0,
-                                        height: 128.0,
-                                        fit: BoxFit.fitWidth,
-                                      )
-                                    : const SizedBox(
-                                        width: 128.0,
-                                        height: 128.0,
-                                        child: Image(
-                                          image: AssetImage('assets/logo-new.png'),
+                                ),
+                                const SizedBox(width: 8.0),
+                                Expanded(
+                                  child: item.get('photo') != null
+                                  ? Image.network(
+                                      item.get('photo'),
+                                      width: 128.0,
+                                      height: 128.0,
+                                      fit: BoxFit.fitWidth,
+                                    )
+                                  : const SizedBox(
+                                      width: 128.0,
+                                      height: 128.0,
+                                      child: Image(
+                                        image: AssetImage('assets/logo-new.png'),
+                                      ),
+                                    ),
+                                ),
+                              ],
+                            ),
+                            const SizedBox(height: 4.0),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      item.get('name'),
+                                      style: const TextStyle(
+                                        color: Colors.black, //TODO : dry code kebawah, yang ada Colors.black nya
+                                        fontSize: 18.0,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                    Text(
+                                      languageChange[item.get('type')]!,
+                                      style: const TextStyle(color: Colors.black),
+                                    ),
+                                    Text(
+                                      item.get('address'),
+                                      style: const TextStyle(color: Colors.black),
+                                    ),
+                                    Text(
+                                      item.get('size-length').toString(),
+                                      style: const TextStyle(color: Colors.black),
+                                    ),
+                                    Text(
+                                      item.get('size-width').toString(),
+                                      style: const TextStyle(color: Colors.black),
+                                    ),
+                                    Text(
+                                      item.get('price').toString(),
+                                      style: const TextStyle(color: Colors.black),
+                                    ),
+                                  ],
+                                ),
+                                //TODO : conditional nya beda sendiri, perlu diubah?
+                                Column(
+                                  children: user != null
+                                  ? [
+                                      IconButton(
+                                        icon: const Icon(
+                                          Icons.edit,
+                                          color: Color.fromARGB(255, 168, 86, 86),
                                         ),
+                                        onPressed: () {
+                                          Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                              builder: (context) => EditProduk(item: item),
+                                            ),
+                                          );
+                                        },
                                       ),
-                                  ),
-                                ],
-                              ),
-                              const SizedBox(height: 4.0),
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        item.get('name'),
-                                        style: const TextStyle(
-                                          color: Colors.black, //TODO : dry code kebawah, yang ada Colors.black nya
-                                          fontSize: 18.0,
-                                          fontWeight: FontWeight.bold,
-                                        ),
-                                      ),
-                                      Text(
-                                        languageChange[item.get('type')]!,
-                                        style: const TextStyle(color: Colors.black),
-                                      ),
-                                      Text(
-                                        item.get('address'),
-                                        style: const TextStyle(color: Colors.black),
-                                      ),
-                                      Text(
-                                        item.get('size-length').toString(),
-                                        style: const TextStyle(color: Colors.black),
-                                      ),
-                                      Text(
-                                        item.get('size-width').toString(),
-                                        style: const TextStyle(color: Colors.black),
-                                      ),
-                                      Text(
-                                        item.get('price').toString(),
-                                        style: const TextStyle(color: Colors.black),
-                                      ),
-                                    ],
-                                  ),
-                                  //TODO : conditional nya beda sendiri, perlu diubah?
-                                  Column(
-                                    children: user != null
-                                    ? [
-                                        IconButton(
-                                          icon: const Icon(
-                                            Icons.edit,
-                                            color: Color.fromARGB(255, 168, 86, 86),
-                                          ),
-                                          onPressed: () {
-                                            Navigator.push(
-                                              context,
-                                              MaterialPageRoute(
-                                                builder: (context) => EditProduk(item: item),
+                                      //TODO : belum jalan, mau diurus nanti
+                                      IconButton(
+                                        onPressed: () {
+                                          itemDelete = true;
+                                          ScaffoldMessenger.of(context)
+                                          .showSnackBar(
+                                            SnackBar(
+                                              //TODO : ubah ke 'This item will be deleted in 3 seconds'
+                                              content: const Text('Choose an item to delete.'), //TODO : l10n
+                                              duration: const Duration(seconds: 8),
+                                              action: SnackBarAction(
+                                                label: 'Cancel',
+                                                onPressed: () {
+                                                  ScaffoldMessenger.of(context)
+                                                  .hideCurrentSnackBar();
+                                                }
                                               ),
-                                            );
-                                          },
+                                            ),
+                                          )
+                                          .closed
+                                          .then(
+                                            (value) => itemDelete = false,
+                                          );
+                                        },
+                                        icon: const Icon(
+                                          Icons.delete,
+                                          color: Color.fromARGB(255, 168, 86, 86),
                                         ),
-                                        //TODO : belum jalan, mau diurus nanti
-                                        IconButton(
-                                          onPressed: () {
-                                            itemDelete = true;
-                                            ScaffoldMessenger.of(context)
-                                            .showSnackBar(
-                                              SnackBar(
-                                                //TODO : ubah ke 'This item will be deleted in 3 seconds'
-                                                content: const Text('Choose an item to delete.'), //TODO : l10n
-                                                duration: const Duration(seconds: 8),
-                                                action: SnackBarAction(
-                                                  label: 'Cancel',
-                                                  onPressed: () {
-                                                    ScaffoldMessenger.of(context)
-                                                    .hideCurrentSnackBar();
-                                                  }
-                                                ),
-                                              ),
-                                            )
-                                            .closed
-                                            .then(
-                                              (value) => itemDelete = false,
-                                            );
-                                          },
-                                          icon: const Icon(
-                                            Icons.delete,
-                                            color: Color.fromARGB(255, 168, 86, 86),
-                                          ),
-                                        ),
-                                      ]
-                                    : [], //TODO : cek dis
-                                  ),
-                                ],
-                              ),
-                            ],
-                          )
-                        : SizedBox( //TODO : tambahkan AdMob disini
-                            width: bannerAd.size.width.toDouble(),
-                            height: bannerAd.size.height.toDouble(),
-                            child: AdWidget(ad: bannerAd),
-                          ),
+                                      ),
+                                    ]
+                                  : [], //TODO : cek dis
+                                ),
+                              ],
+                            ),
+                          ],
+                        )
+                        : SizedBox(
+                          width: bannerAd.size.width.toDouble(),
+                          height: bannerAd.size.height.toDouble(),
+                          child: AdWidget(ad: bannerAd),
+                        ),
                       );
                     },
                   );
