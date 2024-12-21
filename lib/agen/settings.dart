@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:awesome_notifications/awesome_notifications.dart';
+import 'dart:async'; // Untuk Timer
 
 import 'package:cyberprop/provider/lightdark_provider.dart';
 import 'package:cyberprop/provider/language_provider.dart';
@@ -18,50 +19,58 @@ class MyNotification {
   MyNotification(BuildContext context) {
     this.context = context;
   }
-  Future<void> createBasicNotification() async {
-    AwesomeNotifications().isNotificationAllowed().then((isAllowed) {
-      if (!isAllowed) {
-        AwesomeNotifications()
-        .requestPermissionToSendNotifications()
-        .then((_) => Navigator.pop(context));
-      }
-    });
+
+  // Timer untuk logika manual
+  Timer? _timer;
+  int _counter = 0;
+
+  void startCustomNotification() {
+    // Timer untuk logika manual
+    _timer = Timer.periodic(Duration(seconds: 10), (timer) async {
+      _counter++;
+      debugPrint('Notifikasi ke-$_counter setelah ${_counter * 10} detik.');
+
+      // Membuat notifikasi instan
       await AwesomeNotifications().createNotification(
         content: NotificationContent(
-          id: 0,
-          channelKey: 'basic_channel',
-          title: 'Cyberprop',
-          body: 'Pengingat ada properti mau dibeli',
+          id: _counter, // ID unik untuk setiap notifikasi
+          channelKey: 'manual_channel',
+          title: '${AppLocalizations.of(context)!.reminder} #$_counter!', 
+          body: '${AppLocalizations.of(context)!.thisisyour} $_counter ${AppLocalizations.of(context)!.notifafter} ${_counter * 10} ${AppLocalizations.of(context)!.seconds}', 
+          notificationLayout: NotificationLayout.Default,
         ),
       );
+    });
   }
 
   Future<void> createScheduleNotification() async {
     AwesomeNotifications().isNotificationAllowed().then((isAllowed) {
       if (!isAllowed) {
         AwesomeNotifications()
-        .requestPermissionToSendNotifications()
-        .then((_) => Navigator.pop(context));
+            .requestPermissionToSendNotifications()
+            .then((_) => Navigator.pop(context));
       }
     });
-    print("KELUAR");
+
+    // Membuat notifikasi yang dijadwalkan
     await AwesomeNotifications().createNotification(
       content: NotificationContent(
-        id: 1, 
+        id: 1,
         channelKey: 'schedule_channel',
-        title: 'Notification every single minute',
-        body: 'This notification was scheduled to repeat every minute.',
-        ),
-        schedule: NotificationCalendar.fromDate(
-          date: DateTime.now()
-          // date: DateTime.now().add(const Duration(seconds: 60))
-        )
-      );
-    print("KELUAR2");
+        title: 'Scheduled Notification',
+        body: 'This notification was scheduled to repeat every 10 seconds.',
+      ),
+      schedule: NotificationInterval(
+        interval: Duration(seconds: 10), // Interval dalam detik
+        timeZone: await AwesomeNotifications().getLocalTimeZoneIdentifier(),
+        preciseAlarm: true, // Memastikan presisi notifikasi
+      ),
+    );
+    debugPrint("Notifikasi dijadwalkan setiap 10 detik.");
   }
 }
 
-class _SettingsState extends State<Settings> {  
+class _SettingsState extends State<Settings> {
   @override
   Widget build(BuildContext context) {
     final themeProvider = Provider.of<LightDarkProvider>(context);
@@ -132,18 +141,23 @@ class _SettingsState extends State<Settings> {
               ],
             ),
             const SizedBox(height: 18.0),
-             Row(
+            Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 const Text('Notifikasi'),
-                ElevatedButton(onPressed: (){
-                  notify.createBasicNotification();
-                }, child: Text('Notify')),
-              ]
-             ),
+                ElevatedButton(
+                  onPressed: () {
+                    // Memulai notifikasi setiap 10 detik
+                    notify.startCustomNotification();
+                  },
+                  child: Text(AppLocalizations.of(context)!.notifyme),
+                ),
+              ],
+            ),
           ],
         ),
       ),
     );
   }
 }
+
