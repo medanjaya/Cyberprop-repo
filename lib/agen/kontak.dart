@@ -29,9 +29,30 @@ class Contact extends StatelessWidget {
               ),
             ),
           ),
-          const CircleAvatar( //TODO : nanti tambahkan profil si om
-            radius: 96.0,
-            child: Text('tambahkan profil disini'),
+          const Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              CircleAvatar(
+                radius: 80.0,
+                backgroundImage: NetworkImage(
+                  'https://ocicio.com/public/uploads/avatar/avatar-366.jpg'
+                ),
+              ),
+              SizedBox(width: 16.0),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'Nicolas Lee',
+                    style: TextStyle(
+                      fontSize: 18.0,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  Text('Property Consultant') //TODO : l10n
+                ],
+              ),
+            ],
           ),
           const SizedBox(height: 16.0),
           Expanded(

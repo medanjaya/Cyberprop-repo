@@ -1,32 +1,37 @@
+import 'dart:async'; // Untuk Timer
+
 import 'package:flutter/material.dart';
+
 import 'package:provider/provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:awesome_notifications/awesome_notifications.dart';
-import 'dart:async'; // Untuk Timer
 
 import 'package:cyberprop/provider/lightdark_provider.dart';
 import 'package:cyberprop/provider/language_provider.dart';
 
-class Settings extends StatefulWidget {
-  const Settings({super.key});
-
-  @override
-  State<Settings> createState() => _SettingsState();
-}
-
 class MyNotification {
   late BuildContext context;
-  MyNotification(BuildContext context) {
-    this.context = context;
-  }
+  MyNotification(this.context);
 
   // Timer untuk logika manual
   Timer? _timer;
   int _counter = 0;
 
   void startCustomNotification() {
+    AwesomeNotifications().isNotificationAllowed().then(
+      (isAllowed) {
+        if (!isAllowed) {
+          AwesomeNotifications()
+          .requestPermissionToSendNotifications()
+          .then(
+            (_) => Navigator.pop(context)
+          );
+        }
+      }
+    );
+    
     // Timer untuk logika manual
-    _timer = Timer.periodic(Duration(seconds: 10), (timer) async {
+    _timer = Timer.periodic(const Duration(seconds: 10), (timer) async {
       _counter++;
       debugPrint('Notifikasi ke-$_counter setelah ${_counter * 10} detik.');
 
@@ -44,14 +49,18 @@ class MyNotification {
   }
 
   Future<void> createScheduleNotification() async {
-    AwesomeNotifications().isNotificationAllowed().then((isAllowed) {
-      if (!isAllowed) {
-        AwesomeNotifications()
-            .requestPermissionToSendNotifications()
-            .then((_) => Navigator.pop(context));
+    AwesomeNotifications().isNotificationAllowed().then(
+      (isAllowed) {
+        if (!isAllowed) {
+          AwesomeNotifications()
+          .requestPermissionToSendNotifications()
+          .then(
+            (_) => Navigator.pop(context)
+          );
+        }
       }
-    });
-
+    );
+    
     // Membuat notifikasi yang dijadwalkan
     await AwesomeNotifications().createNotification(
       content: NotificationContent(
@@ -61,13 +70,20 @@ class MyNotification {
         body: 'This notification was scheduled to repeat every 10 seconds.',
       ),
       schedule: NotificationInterval(
-        interval: Duration(seconds: 10), // Interval dalam detik
+        interval: const Duration(seconds: 10), // Interval dalam detik
         timeZone: await AwesomeNotifications().getLocalTimeZoneIdentifier(),
         preciseAlarm: true, // Memastikan presisi notifikasi
       ),
     );
     debugPrint("Notifikasi dijadwalkan setiap 10 detik.");
   }
+}
+
+class Settings extends StatefulWidget {
+  const Settings({super.key});
+
+  @override
+  State<Settings> createState() => _SettingsState();
 }
 
 class _SettingsState extends State<Settings> {

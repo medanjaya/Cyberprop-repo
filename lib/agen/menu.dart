@@ -4,11 +4,13 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
+import 'package:flutter_map/flutter_map.dart';
+import 'package:latlong2/latlong.dart';
+import 'package:intl/intl.dart';
 
 import 'package:cyberprop/agen/login.dart';
 import 'package:cyberprop/agen/tambah_produk.dart';
 import 'package:cyberprop/agen/edit_produk.dart';
-import 'package:cyberprop/agen/maps.dart';
 
 class Menu extends StatefulWidget {
   const Menu({super.key});
@@ -23,7 +25,7 @@ class _MenuState extends State<Menu> {
 
   late BannerAd bannerAd;
   bool isBannerReady = false;
-
+  
   @override
   void initState() {
     super.initState();
@@ -33,7 +35,7 @@ class _MenuState extends State<Menu> {
   void loadBannerAd() {
     bannerAd = BannerAd(
       size: AdSize.banner,
-      adUnitId: "ca-app-pub-3940256099942544/6300978111",
+      adUnitId: 'ca-app-pub-3940256099942544/6300978111',
       listener: BannerAdListener(
         onAdLoaded: (ad) {
           setState(
@@ -63,7 +65,7 @@ class _MenuState extends State<Menu> {
     };
 
     final User? user = FirebaseAuth.instance.currentUser;
-
+    
     return Scaffold(
       appBar: AppBar(
         title: Text(
@@ -140,14 +142,7 @@ class _MenuState extends State<Menu> {
                   ),
                 ),
                 IconButton(
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => const SampleMaps()
-                      ),
-                    );
-                  },
+                  onPressed: () {},
                   icon: const Icon(
                     Icons.filter_alt_outlined,
                     size: 32.0,
@@ -170,7 +165,7 @@ class _MenuState extends State<Menu> {
                       ),
                   )
                   .toList();
-
+                  
                   return ListView.builder(
                     itemCount: filteredSnapshot.length,
                     itemBuilder: (context, i) {
@@ -199,17 +194,37 @@ class _MenuState extends State<Menu> {
                           children: [
                             Row(
                               children: [
-                                const SizedBox( //TODO : untuk map kalau jadi
+                                SizedBox(
                                   width: 128.0,
                                   height: 128.0,
-                                  child: ColoredBox(
-                                    color: Colors.black,
-                                    child: Text(
-                                      'tambahkan lokasi disini',
-                                      style: TextStyle(
-                                        color: Colors.white,
+                                  child: FlutterMap(
+                                    options: MapOptions(
+                                      initialCenter: LatLng(
+                                        item.get('location').latitude,
+                                        item.get('location').longitude,
                                       ),
+                                      initialZoom: 16.0,
                                     ),
+                                    children: [
+                                      TileLayer(
+                                        urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
+                                        retinaMode: true,
+                                      ),
+                                      MarkerLayer(
+                                        markers: [
+                                          Marker(
+                                            point: LatLng(
+                                              item.get('location').latitude,
+                                              item.get('location').longitude,
+                                            ),
+                                            child: const Icon(
+                                              Icons.house,
+                                              size: 32.0,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ],
                                   ),
                                 ),
                                 const SizedBox(width: 8.0),
@@ -247,7 +262,7 @@ class _MenuState extends State<Menu> {
                                       ),
                                     ),
                                     Text(
-                                      languageChange[item.get('type')]!,
+                                      '${languageChange[item.get('type')]!} - ${item.get('size-length').toString()} m x ${item.get('size-width').toString()} m', //TODO : panjang kale
                                       style: const TextStyle(color: Colors.black),
                                     ),
                                     Text(
@@ -255,15 +270,7 @@ class _MenuState extends State<Menu> {
                                       style: const TextStyle(color: Colors.black),
                                     ),
                                     Text(
-                                      item.get('size-length').toString(),
-                                      style: const TextStyle(color: Colors.black),
-                                    ),
-                                    Text(
-                                      item.get('size-width').toString(),
-                                      style: const TextStyle(color: Colors.black),
-                                    ),
-                                    Text(
-                                      item.get('price').toString(),
+                                      'Rp. ${NumberFormat('###,000').format(item.get('price')).toString()}',
                                       style: const TextStyle(color: Colors.black),
                                     ),
                                   ],
@@ -286,21 +293,27 @@ class _MenuState extends State<Menu> {
                                           );
                                         },
                                       ),
-                                      //TODO : belum jalan, mau diurus nanti
                                       IconButton(
                                         onPressed: () {
                                           itemDelete = true;
                                           ScaffoldMessenger.of(context)
                                           .showSnackBar(
                                             SnackBar(
-                                              //TODO : ubah ke 'This item will be deleted in 3 seconds'
-                                              content: const Text('Choose an item to delete.'), //TODO : l10n
-                                              duration: const Duration(seconds: 8),
+                                              content: const Text('Press \'OK\' to delete item.'), //TODO : l10n
+                                              duration: const Duration(seconds: 5),
                                               action: SnackBarAction(
-                                                label: 'Cancel',
+                                                label: 'OK',
                                                 onPressed: () {
+                                                  ScaffoldMessenger.of(context).hideCurrentSnackBar(); //TODO : dry
                                                   ScaffoldMessenger.of(context)
-                                                  .hideCurrentSnackBar();
+                                                  .showSnackBar(
+                                                    const SnackBar(
+                                                      content: Text('Item deleted.'),
+                                                    ),
+                                                  );
+                                                  
+                                                  db.collection('property').doc(filteredSnapshot[i].id)
+                                                  .delete();
                                                 }
                                               ),
                                             ),
@@ -341,7 +354,7 @@ class _MenuState extends State<Menu> {
                     child: CircularProgressIndicator()
                   );
                 }
-              }
+              },
             ),
           ),
         ],

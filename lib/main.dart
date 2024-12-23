@@ -24,22 +24,27 @@ void main() async {
     appleProvider: AppleProvider.appAttest,
   );
 
-  AwesomeNotifications().initialize('', [
-    NotificationChannel(
-      channelKey: 'basic_channel', 
-      channelName: 'Basic Notifications', 
-      defaultColor: Colors.teal,
-      importance: NotificationImportance.High,
-      channelShowBadge: true,
-      channelDescription: 'For Basic Notification'),
-    NotificationChannel(
-      channelKey: 'schedule_channel', 
-      channelName: 'Schedule Notifications', 
-      defaultColor: Colors.teal,
-      importance: NotificationImportance.High,
-      channelShowBadge: true,
-      channelDescription: 'For Schedule Notification')
-  ]);
+  AwesomeNotifications().initialize(
+    '',
+    [
+      NotificationChannel(
+        channelKey: 'manual_channel', 
+        channelName: 'Manual Notifications', 
+        defaultColor: Colors.teal,
+        importance: NotificationImportance.High,
+        channelShowBadge: true,
+        channelDescription: 'For Manual Notification'
+      ),
+      NotificationChannel(
+        channelKey: 'schedule_channel', 
+        channelName: 'Schedule Notifications', 
+        defaultColor: Colors.teal,
+        importance: NotificationImportance.High,
+        channelShowBadge: true,
+        channelDescription: 'For Schedule Notification'
+      ),
+    ],
+  );
 
   runApp(
     MultiProvider(
