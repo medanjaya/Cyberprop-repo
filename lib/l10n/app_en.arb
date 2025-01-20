@@ -38,5 +38,8 @@
   "thisisyour": "This is your",
   "notifafter": "notification after",
   "seconds": "seconds; buy some property!",
-  "notifyme": "Notify me"
+  "notifyme": "Notify me",
+  "pressok": "Press 'OK' to delete item.",
+  "deleted": "Item deleted.",
+  "searchname": "Search item by name"
 }

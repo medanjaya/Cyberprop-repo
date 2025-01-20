@@ -14,7 +14,6 @@ class MyNotification {
   MyNotification(this.context);
 
   // Timer untuk logika manual
-  Timer? _timer;
   int _counter = 0;
 
   void startCustomNotification() {
@@ -31,7 +30,7 @@ class MyNotification {
     );
     
     // Timer untuk logika manual
-    _timer = Timer.periodic(const Duration(seconds: 10), (timer) async {
+    Timer.periodic(const Duration(seconds: 10), (timer) async {
       _counter++;
       debugPrint('Notifikasi ke-$_counter setelah ${_counter * 10} detik.');
 

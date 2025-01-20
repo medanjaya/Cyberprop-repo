@@ -38,5 +38,8 @@
   "thisisyour": "Ini adalah notifikasi ke",
   "notifafter": "setelah; ayo beli properti!",
   "seconds": "detik",
-  "notifyme": "Ingatkan aku"
+  "notifyme": "Ingatkan aku",
+  "pressok": "Tekan 'OK' untuk menghapus item.",
+  "deleted": "Item dihapus.",
+  "searchname": "Cari item sesuai nama "
 }

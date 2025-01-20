@@ -23,6 +23,9 @@ class _MenuState extends State<Menu> {
   String itemKey = '';
   bool itemDelete = false;
 
+  String filterKey = 'name';
+  List filterList = ['name', 'type', 'address'];
+
   late BannerAd bannerAd;
   bool isBannerReady = false;
   
@@ -126,8 +129,8 @@ class _MenuState extends State<Menu> {
                     onChanged: (value) {
                       itemKey = value;
                     },
-                    decoration: const InputDecoration(
-                      hintText: 'Search item by name' //TODO : l10n
+                    decoration: InputDecoration(
+                      hintText: AppLocalizations.of(context)!.searchname,
                     ),
                   ),
                 ),
@@ -141,8 +144,24 @@ class _MenuState extends State<Menu> {
                     size: 32.0,
                   ),
                 ),
-                IconButton(
-                  onPressed: () {},
+                DropdownButton(
+                  items: List.generate(
+                    filterList.length,
+                    (i) {
+                      return DropdownMenuItem(
+                        value: filterList[i],
+                        child: Text(filterList[i]),
+                      );
+                    },
+                  ),
+                  onChanged: (value) {
+                    setState(
+                      () {
+                        filterKey = value.toString();
+                      }
+                    );
+                  },
+                  value: filterKey,
                   icon: const Icon(
                     Icons.filter_alt_outlined,
                     size: 32.0,
@@ -159,7 +178,7 @@ class _MenuState extends State<Menu> {
                 if (snapshot.hasData && snapshot.data != null) {
                   final filteredSnapshot = snapshot.data!.docs.where(
                     (e) =>
-                      e.get('name').toString().toLowerCase()
+                      e.get(filterKey).toString().toLowerCase()
                       .contains(
                         itemKey.toLowerCase(),
                       ),
@@ -189,7 +208,7 @@ class _MenuState extends State<Menu> {
                             ),
                           ],
                         ),
-                        child: (i + 1) % 6 != 0 //TODO : atau nilainya mau dirandom aja?
+                        child: (i + 1) % 6 != 0 //&& Random().nextBool() TODO : takutnya satu seed, jadinya bisa ga muncul semua
                         ? Column(
                           children: [
                             Row(
@@ -262,7 +281,7 @@ class _MenuState extends State<Menu> {
                                       ),
                                     ),
                                     Text(
-                                      '${languageChange[item.get('type')]!} - ${item.get('size-length').toString()} m x ${item.get('size-width').toString()} m', //TODO : panjang kale
+                                      '${languageChange[item.get('type')]!} - ${item.get('size-length').toString()} m x ${item.get('size-width').toString()} m',
                                       style: const TextStyle(color: Colors.black),
                                     ),
                                     Text(
@@ -275,7 +294,6 @@ class _MenuState extends State<Menu> {
                                     ),
                                   ],
                                 ),
-                                //TODO : conditional nya beda sendiri, perlu diubah?
                                 Column(
                                   children: user != null
                                   ? [
@@ -299,19 +317,18 @@ class _MenuState extends State<Menu> {
                                           ScaffoldMessenger.of(context)
                                           .showSnackBar(
                                             SnackBar(
-                                              content: const Text('Press \'OK\' to delete item.'), //TODO : l10n
+                                              content: Text(AppLocalizations.of(context)!.pressok),
                                               duration: const Duration(seconds: 5),
                                               action: SnackBarAction(
                                                 label: 'OK',
                                                 onPressed: () {
-                                                  ScaffoldMessenger.of(context).hideCurrentSnackBar(); //TODO : dry
+                                                  ScaffoldMessenger.of(context).hideCurrentSnackBar();
                                                   ScaffoldMessenger.of(context)
                                                   .showSnackBar(
-                                                    const SnackBar(
-                                                      content: Text('Item deleted.'),
+                                                    SnackBar(
+                                                      content: Text(AppLocalizations.of(context)!.deleted),
                                                     ),
                                                   );
-                                                  
                                                   db.collection('property').doc(filteredSnapshot[i].id)
                                                   .delete();
                                                 }
@@ -329,7 +346,7 @@ class _MenuState extends State<Menu> {
                                         ),
                                       ),
                                     ]
-                                  : [], //TODO : cek dis
+                                  : [],
                                 ),
                               ],
                             ),
@@ -371,7 +388,7 @@ class _MenuState extends State<Menu> {
         },
         child: const Icon(Icons.add),
       )
-      : null, //TODO : mencurigakan
+      : null,
     );
   }
 }
