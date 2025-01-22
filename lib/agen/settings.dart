@@ -19,15 +19,7 @@ class MyNotification {
     AwesomeNotifications().isNotificationAllowed().then(
       (isAllowed) {
         if (!isAllowed) {
-          AwesomeNotifications()
-          .requestPermissionToSendNotifications()
-          .then(
-            (_) {
-              if (context.mounted) {
-                Navigator.pop(context);
-              }
-            }
-          );
+          AwesomeNotifications().requestPermissionToSendNotifications();
         }
       }
     );
@@ -155,7 +147,7 @@ class _SettingsState extends State<Settings> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              const Text('Notifikasi'),
+              Text(AppLocalizations.of(context)!.notification),
               ElevatedButton(
                 onPressed: () {
                   notify.startCustomNotification();

@@ -71,7 +71,7 @@ class _EditProdukState extends State<EditProduk> {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          AppLocalizations.of(context)!.addnewproperty,
+          AppLocalizations.of(context)!.editproperty,
           style: const TextStyle(
             color: Colors.white,
           ),
