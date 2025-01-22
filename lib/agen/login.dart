@@ -89,7 +89,8 @@ class _LoginState extends State<Login> {
                       ScaffoldMessenger.of(context)
                       .showSnackBar(
                         SnackBar(
-                          content: Text(e.message.toString()) //TODO : dis is not perfek
+                          content: Text(e.message.toString()),
+                          backgroundColor: Colors.red,
                         ),
                       );
                     }
@@ -99,7 +100,7 @@ class _LoginState extends State<Login> {
                 .authStateChanges()
                 .listen(
                   (User? user) {
-                    if (user != null && context.mounted) { //TODO : perhatikan context.mounted nya
+                    if (user != null && context.mounted) {
                       Navigator.of(context)
                       .pushAndRemoveUntil(
                         MaterialPageRoute(

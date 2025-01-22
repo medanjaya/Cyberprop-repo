@@ -33,6 +33,7 @@
   "english": "Inggris",
   "indonesian": "Indonesia",
   "imagefail": "Gambar gagal di-upload: ",
+  "itemfail": "Item gagal di-upload: ",
   "noimage": "Tidak ada gambar yang dipilih!",
   "reminder": "Pengingat",
   "thisisyour": "Ini adalah notifikasi ke",
@@ -41,5 +42,8 @@
   "notifyme": "Ingatkan aku",
   "pressok": "Tekan 'OK' untuk menghapus item.",
   "deleted": "Item dihapus.",
-  "searchname": "Cari item sesuai nama "
+  "search": "Cari Item sesuai ",
+  "searchname": "Nama",
+  "searchtype": "Tipe",
+  "searchaddress": "Alamat"
 }

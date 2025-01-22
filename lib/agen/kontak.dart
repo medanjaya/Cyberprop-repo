@@ -9,80 +9,71 @@ class Contact extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(
-          AppLocalizations.of(context)!.agentcontact,
-          style: const TextStyle(color: Colors.white),
-        ),
-        backgroundColor: const Color.fromARGB(255, 168, 86, 86),
-      ),
-      body: Column(
-        children: [
-          Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Text( //TODO : kayaknya redundant, ganti foto profil si om aja kali
-              AppLocalizations.of(context)!.contactlist,
-              style: const TextStyle(
-                fontSize: 24.0,
-                fontWeight: FontWeight.bold,
-              ),
+    return Column(
+      children: [
+        Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Text(
+            AppLocalizations.of(context)!.contactlist,
+            style: const TextStyle(
+              fontSize: 24.0,
+              fontWeight: FontWeight.bold,
             ),
           ),
-          const Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              CircleAvatar(
-                radius: 80.0,
-                backgroundImage: NetworkImage(
-                  'https://ocicio.com/public/uploads/avatar/avatar-366.jpg'
-                ),
+        ),
+        const Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            CircleAvatar(
+              radius: 80.0,
+              backgroundImage: NetworkImage(
+                'https://ocicio.com/public/uploads/avatar/avatar-366.jpg'
               ),
-              SizedBox(width: 16.0),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    'Nicolas Lee',
-                    style: TextStyle(
-                      fontSize: 18.0,
-                      fontWeight: FontWeight.bold,
-                    ),
+            ),
+            SizedBox(width: 16.0),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Nicolas Lee',
+                  style: TextStyle(
+                    fontSize: 18.0,
+                    fontWeight: FontWeight.bold,
                   ),
-                  Text('Property Consultant') //TODO : l10n
-                ],
+                ),
+                Text('Property Consultant')
+              ],
+            ),
+          ],
+        ),
+        const SizedBox(height: 16.0),
+        Expanded(
+          child: ListView(
+            children: [
+              _buildContactTile(
+                'WhatsApp',
+                FontAwesomeIcons.whatsapp,
+                'https://wa.me/6288263002120',
+              ),
+              _buildContactTile(
+                'Instagram',
+                FontAwesomeIcons.instagram,
+                'https://www.instagram.com/nicolasleeproperty?igsh=MWhheGhiaWJ4d2hwOQ==',
+              ),
+              _buildContactTile(
+                'Facebook',
+                FontAwesomeIcons.facebook,
+                'https://www.facebook.com/share/MNe7fKiLNFdLXWbQ/?mibextid=qi2Omg',
+              ),
+              _buildContactTile(
+                'Tiktok',
+                FontAwesomeIcons.tiktok,
+                'https://vm.tiktok.com/ZMh9MSeVm/',
               ),
             ],
-          ),
-          const SizedBox(height: 16.0),
-          Expanded(
-            child: ListView(
-              children: [  //TODO : sebelum publish, cek sekali lagi
-                _buildContactTile(
-                  'WhatsApp',
-                  FontAwesomeIcons.whatsapp,
-                  'https://wa.me/6288263002120',
-                ),
-                _buildContactTile(
-                  'Instagram',
-                  FontAwesomeIcons.instagram,
-                  'https://www.instagram.com/nicolasleeproperty?igsh=MWhheGhiaWJ4d2hwOQ==',
-                ),
-                _buildContactTile(
-                  'Facebook',
-                  FontAwesomeIcons.facebook,
-                  'https://www.facebook.com/share/MNe7fKiLNFdLXWbQ/?mibextid=qi2Omg',
-                ),
-                _buildContactTile(
-                  'Tiktok',
-                  FontAwesomeIcons.tiktok,
-                  'https://vm.tiktok.com/ZMh9MSeVm/',
-                ),
-              ],
-            ), 
-          ),
-        ],
-      ),
+          ), 
+        ),
+      ],
     );
   }
 

@@ -1,5 +1,6 @@
 name: cyberprop
 description: 'Aplikasi Properti.'
+
 # The following line prevents the package from being accidentally published to
 # pub.dev using `flutter pub publish`. This is preferred for private packages.
 publish_to: 'none' # Remove this line if you wish to publish to pub.dev
@@ -38,6 +39,7 @@ dependencies:
   awesome_notifications: ^0.10.0
   google_mobile_ads: ^5.2.0
   dropdown_button2: ^2.3.9
+  flutter_map_dragmarker: ^7.0.0
 
 dev_dependencies:
   flutter_lints: ^5.0.0

@@ -1,31 +1,37 @@
 import 'dart:io';
+
 import 'package:flutter/material.dart';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:flutter_map/flutter_map.dart';
+import 'package:flutter_map_dragmarker/flutter_map_dragmarker.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:latlong2/latlong.dart';
 
 import 'package:cyberprop/agen/access_cam.dart';
 
 class EditProduk extends StatefulWidget {
   const EditProduk({super.key, required this.item});
 
-  final dynamic item; //TODO : ubah ini
+  final dynamic item;
 
   @override
   State<EditProduk> createState() => _EditProdukState();
 }
 
 class _EditProdukState extends State<EditProduk> {  
-  final FirebaseFirestore db = FirebaseFirestore.instance; //TODO : ini di dalam atau luar build?
+  final FirebaseFirestore db = FirebaseFirestore.instance;
   final Reference storeRef = FirebaseStorage.instance.ref();
   
   dynamic dropValue;
-  dynamic storeRefUrl; //TODO : cek ini dua dynamic nanti
+  dynamic storeRefUrl;
   XFile? pickedImage;
-  
+
+  LatLng geoValue = const LatLng(3.5876602526868404, 98.69068410416499);
+
   final TextEditingController namaController = TextEditingController();
   final TextEditingController alamatController = TextEditingController();
   final TextEditingController panjangController = TextEditingController();
@@ -38,6 +44,12 @@ class _EditProdukState extends State<EditProduk> {
     super.initState();
 
     dropValue = widget.item.get('type');
+    
+    geoValue = LatLng(
+      widget.item.get('location').latitude,
+      widget.item.get('location').longitude,
+    );
+    
     namaController.text = widget.item.get('name');
     alamatController.text = widget.item.get('address');
     panjangController.text = widget.item.get('size-length').toString();
@@ -47,7 +59,7 @@ class _EditProdukState extends State<EditProduk> {
   }
 
   @override
-  Widget build(BuildContext context) { //TODO : dry, ubah secepatnya
+  Widget build(BuildContext context) {
     final Map<String, String> languageChange = {
       'house': AppLocalizations.of(context)!.houseorshophouse,
       'condo': AppLocalizations.of(context)!.apartementorcondominium,
@@ -166,8 +178,8 @@ class _EditProdukState extends State<EditProduk> {
                     ),
                   ),
                   IconButton(
-                    onPressed: () async { //TODO : dry code kebawah
-                      if (await Permission.camera.status.isGranted) {
+                    onPressed: () async {
+                      if (await Permission.camera.status.isGranted && context.mounted) {
                         final shotImage = await Navigator.push(
                           context,
                           MaterialPageRoute(
@@ -176,7 +188,7 @@ class _EditProdukState extends State<EditProduk> {
                         );
                         
                         final imageFile = File(shotImage!.path);
-                        final newStoreRef = storeRef.child('shotImage${shotImage.hashCode.toString()}.jpg'); //TODO : ubah ini
+                        final newStoreRef = storeRef.child('shotImage${shotImage.hashCode.toString()}.jpg');
                         
                         try {
                           await newStoreRef.putFile(imageFile).whenComplete(
@@ -201,7 +213,7 @@ class _EditProdukState extends State<EditProduk> {
                       else {
                         final status = await Permission.camera.request();
 
-                        if (status == PermissionStatus.granted) {
+                        if (status == PermissionStatus.granted && context.mounted) {
                           final shotImage = await Navigator.push(
                             context,
                             MaterialPageRoute(
@@ -210,7 +222,7 @@ class _EditProdukState extends State<EditProduk> {
                           );
                           
                           final imageFile = File(shotImage!.path);
-                          final newStoreRef = storeRef.child('shotImage${shotImage.hashCode.toString()}.jpg'); //TODO : ubah ini
+                          final newStoreRef = storeRef.child('shotImage${shotImage.hashCode.toString()}.jpg');
                           
                           try {
                             await newStoreRef.putFile(imageFile).whenComplete(
@@ -295,6 +307,43 @@ class _EditProdukState extends State<EditProduk> {
                   border: InputBorder.none,
                 ),
               ),
+              const SizedBox(height: 8.0),
+              SizedBox(
+                height: 192.0,
+                child: FlutterMap(
+                  options: MapOptions(
+                    initialCenter: geoValue,
+                    initialZoom: 16.0,
+                  ),
+                  children: [
+                    TileLayer(
+                      urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
+                      retinaMode: true,
+                    ),
+                    DragMarkers(
+                      markers: [
+                        DragMarker(
+                          onDragEnd: (details, point) {
+                            setState(
+                              () {
+                                geoValue = point;
+                              }
+                            );
+                          },
+                          point: geoValue,
+                          builder: (context, geo, state) {
+                            return const Icon(
+                              Icons.house,
+                              size: 32.0,
+                            );
+                          },
+                          size: const Size(32.0, 32.0),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
               const SizedBox(height: 16.0),
               Text(
                 AppLocalizations.of(context)!.size,
@@ -375,33 +424,45 @@ class _EditProdukState extends State<EditProduk> {
               Center(
                 child: ElevatedButton(
                   onPressed: () {
-                    db.collection('property')
-                    .doc(widget.item.id)
-                    .update(
-                      {
-                        'address': alamatController.text,
-                        'desc': deskripsiController.text,
-                        'location': const GeoPoint(0.0, 0.0), //TODO : nanti kita kejar abang Yap masalah ini
-                        'name': namaController.text,
-                        'photo': storeRefUrl ?? widget.item.get('photo'), //TODO : ini juga
-                        'price': int.parse(hargaController.text),
-                        'size-length': int.parse(panjangController.text),
-                        'size-width': int.parse(lebarController.text),
-                        'type': dropValue,
-                      }
-                    );
-                    if (context.mounted) {
-                      Navigator.pop(
-                        context,
-                        ScaffoldMessenger.of(context)
-                        .showSnackBar(
-                          SnackBar(
-                            content: Text(
-                              AppLocalizations.of(context)!.dataupdated
+                    try {
+                      db.collection('property')
+                      .doc(widget.item.id)
+                      .update(
+                        {
+                          'address': alamatController.text,
+                          'desc': deskripsiController.text,
+                          'location': GeoPoint(geoValue.latitude, geoValue.longitude),
+                          'name': namaController.text,
+                          'photo': storeRefUrl ?? widget.item.get('photo'),
+                          'price': int.parse(hargaController.text),
+                          'size-length': int.parse(panjangController.text),
+                          'size-width': int.parse(lebarController.text),
+                          'type': dropValue,
+                        }
+                      );
+                      if (context.mounted) {
+                        Navigator.pop(
+                          context,
+                          ScaffoldMessenger.of(context)
+                          .showSnackBar(
+                            SnackBar(
+                              content: Text(
+                                AppLocalizations.of(context)!.dataupdated
+                              ),
                             ),
                           ),
-                        ),
-                      );
+                        );
+                      }
+                    }
+                    on FirebaseException catch(e) {
+                      if (context.mounted) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text(AppLocalizations.of(context)!.itemfail + e.toString()),
+                            backgroundColor: Colors.red,
+                          ),
+                        );
+                      }
                     }
                   },
                   style: ElevatedButton.styleFrom(

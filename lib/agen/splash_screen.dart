@@ -11,7 +11,7 @@ class SplashScreen extends StatefulWidget {
 }
 
 class _SplashScreenState extends State<SplashScreen> {
-  void moveToNextScreen() { //TODO : ini nanti cari cara ngeload appnya, biar jadi loading beneran
+  void moveToNextScreen() {
     Timer(
       const Duration(seconds: 3),
       () {

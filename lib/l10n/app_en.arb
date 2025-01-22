@@ -33,6 +33,7 @@
   "english": "English",
   "indonesian": "Indonesian",
   "imagefail": "Image upload failed: ",
+  "itemfail": "Item upload failed: ",
   "noimage": "No image chosen.",
   "reminder": "Reminder",
   "thisisyour": "This is your",
@@ -41,5 +42,8 @@
   "notifyme": "Notify me",
   "pressok": "Press 'OK' to delete item.",
   "deleted": "Item deleted.",
-  "searchname": "Search item by name"
+  "search": "Search Item by ",
+  "searchname": "Name",
+  "searchtype": "Type",
+  "searchaddress": "Address"
 }

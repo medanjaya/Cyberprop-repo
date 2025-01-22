@@ -1,4 +1,4 @@
-import 'dart:async'; // Untuk Timer
+import 'dart:async';
 
 import 'package:flutter/material.dart';
 
@@ -13,7 +13,6 @@ class MyNotification {
   late BuildContext context;
   MyNotification(this.context);
 
-  // Timer untuk logika manual
   int _counter = 0;
 
   void startCustomNotification() {
@@ -23,21 +22,23 @@ class MyNotification {
           AwesomeNotifications()
           .requestPermissionToSendNotifications()
           .then(
-            (_) => Navigator.pop(context)
+            (_) {
+              if (context.mounted) {
+                Navigator.pop(context);
+              }
+            }
           );
         }
       }
     );
     
-    // Timer untuk logika manual
     Timer.periodic(const Duration(seconds: 10), (timer) async {
       _counter++;
       debugPrint('Notifikasi ke-$_counter setelah ${_counter * 10} detik.');
 
-      // Membuat notifikasi instan
       await AwesomeNotifications().createNotification(
         content: NotificationContent(
-          id: _counter, // ID unik untuk setiap notifikasi
+          id: _counter,
           channelKey: 'manual_channel',
           title: '${AppLocalizations.of(context)!.reminder} #$_counter!', 
           body: '${AppLocalizations.of(context)!.thisisyour} $_counter ${AppLocalizations.of(context)!.notifafter} ${_counter * 10} ${AppLocalizations.of(context)!.seconds}', 
@@ -54,13 +55,16 @@ class MyNotification {
           AwesomeNotifications()
           .requestPermissionToSendNotifications()
           .then(
-            (_) => Navigator.pop(context)
+            (_) {
+              if (context.mounted) {
+                Navigator.pop(context);
+              }
+            }
           );
         }
       }
     );
     
-    // Membuat notifikasi yang dijadwalkan
     await AwesomeNotifications().createNotification(
       content: NotificationContent(
         id: 1,
@@ -69,9 +73,9 @@ class MyNotification {
         body: 'This notification was scheduled to repeat every 10 seconds.',
       ),
       schedule: NotificationInterval(
-        interval: const Duration(seconds: 10), // Interval dalam detik
+        interval: const Duration(seconds: 10),
         timeZone: await AwesomeNotifications().getLocalTimeZoneIdentifier(),
-        preciseAlarm: true, // Memastikan presisi notifikasi
+        preciseAlarm: true,
       ),
     );
     debugPrint("Notifikasi dijadwalkan setiap 10 detik.");
@@ -92,85 +96,75 @@ class _SettingsState extends State<Settings> {
     final languageProvider = Provider.of<LanguageProvider>(context);
     MyNotification notify = MyNotification(context);
 
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(
-          AppLocalizations.of(context)!.settings,
-          style: const TextStyle(color: Colors.white),
-        ),
-        backgroundColor: const Color.fromARGB(255, 168, 86, 86),
-      ),
-      body: Padding(
-        padding: const EdgeInsets.all(18.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Text(
-                AppLocalizations.of(context)!.appsettings,
-                style: const TextStyle(
-                  fontSize: 24.0,
-                  fontWeight: FontWeight.bold,
-                ),
+    return Padding(
+      padding: const EdgeInsets.all(18.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Text(
+              AppLocalizations.of(context)!.appsettings,
+              style: const TextStyle(
+                fontSize: 24.0,
+                fontWeight: FontWeight.bold,
               ),
             ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(AppLocalizations.of(context)!.lightdarktheme),
-                Switch(
-                  value: themeProvider.enableDarkMode,
-                  activeColor: const Color.fromARGB(255, 100, 185, 255),
-                  onChanged: (e) {
-                    setState(() {
-                      themeProvider.setBrightness = e;
-                    });
-                  },
-                ),
-              ],
-            ),
-            const SizedBox(height: 18.0),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                const Text('Language/Bahasa'),
-                DropdownButton<String>(
-                  value: languageProvider.currentLanguage,
-                  items: const [
-                    DropdownMenuItem(
-                      value: 'en',
-                      child: Text('English'),
-                    ),
-                    DropdownMenuItem(
-                      value: 'id',
-                      child: Text('Indonesia'),
-                    ),
-                  ],
-                  onChanged: (String? value) {
-                    if (value != null) {
-                      languageProvider.setLanguage(value);
-                    }
-                  },
-                ),
-              ],
-            ),
-            const SizedBox(height: 18.0),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                const Text('Notifikasi'),
-                ElevatedButton(
-                  onPressed: () {
-                    // Memulai notifikasi setiap 10 detik
-                    notify.startCustomNotification();
-                  },
-                  child: Text(AppLocalizations.of(context)!.notifyme),
-                ),
-              ],
-            ),
-          ],
-        ),
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(AppLocalizations.of(context)!.lightdarktheme),
+              Switch(
+                value: themeProvider.enableDarkMode,
+                activeColor: const Color.fromARGB(255, 100, 185, 255),
+                onChanged: (e) {
+                  setState(() {
+                    themeProvider.setBrightness = e;
+                  });
+                },
+              ),
+            ],
+          ),
+          const SizedBox(height: 18.0),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              const Text('Language/Bahasa'),
+              DropdownButton<String>(
+                value: languageProvider.currentLanguage,
+                items: const [
+                  DropdownMenuItem(
+                    value: 'en',
+                    child: Text('English'),
+                  ),
+                  DropdownMenuItem(
+                    value: 'id',
+                    child: Text('Indonesia'),
+                  ),
+                ],
+                onChanged: (String? value) {
+                  if (value != null) {
+                    languageProvider.setLanguage(value);
+                  }
+                },
+              ),
+            ],
+          ),
+          const SizedBox(height: 18.0),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              const Text('Notifikasi'),
+              ElevatedButton(
+                onPressed: () {
+                  notify.startCustomNotification();
+                },
+                child: Text(AppLocalizations.of(context)!.notifyme),
+              ),
+            ],
+          ),
+        ],
       ),
     );
   }

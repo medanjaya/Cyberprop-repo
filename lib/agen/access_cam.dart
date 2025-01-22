@@ -11,7 +11,7 @@ class AccessCamera extends StatefulWidget {
 }
 
 class _AccessCameraState extends State<AccessCamera> {
-  late CameraController _controller; //TODO: cek late ini perlu tak
+  late CameraController _controller;
   late List<CameraDescription> cameras;
   late CameraDescription camera;
   Widget? cameraPreview;
@@ -54,10 +54,20 @@ class _AccessCameraState extends State<AccessCamera> {
         onPressed: () async {
           try {
             _controller.takePicture().then(
-              (value) => Navigator.pop(context, value)
+              (value) {
+                if (context.mounted) {
+                  Navigator.pop(context, value);
+                }
+              }
             );
           } catch (e) {
-            print(e); //TODO : nanti diganti
+            ScaffoldMessenger.of(context)
+            .showSnackBar(
+              SnackBar(
+                content: Text(e.toString()),
+                backgroundColor: Colors.red,
+              ),
+            );
           }
         },
         child: const Icon(Icons.camera_alt),
